@@ -1,0 +1,38 @@
+% =============================================================================
+% frontmatter/lists.tex: table of contents, then the lists of tables,
+% figures and algorithms (each starts on its own page).
+%
+% The lists are generated from \caption commands (tables, figures,
+% algorithms) and headings (contents), via auxiliary files written on the
+% previous compile run, so new items appear after the next run.
+%
+% To reorder the lists, move the three-line blocks around. To drop a list
+% (e.g. if there are no algorithms), delete its block.
+% =============================================================================
+
+\begingroup          % start a group: the spacing change below stays inside it
+\setstretch{1}       % lists are single-spaced even though body text is 1.5
+
+\tableofcontents     % "Contents"; not listed in itself
+
+% Each block below:
+%   \clearpage            finish the previous list's page
+%   \phantomsection       invisible anchor so the ToC link jumps to this page
+%   \addcontentsline{toc}{chapter}{title}  add a chapter-level ToC entry
+%   \listof...            print the list (starts with an unnumbered chapter
+%                         heading on the fresh page)
+% The ToC entry is added before the list so it records the right page.
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}      % "List of Tables"
+\listoftables
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}     % "List of Figures"
+\listoffigures
+
+\clearpage\phantomsection
+\addcontentsline{toc}{chapter}{\listalgorithmname}  % "List of Algorithms"
+\listofalgorithms                                   % from the algorithm package
+
+\endgroup            % back to the body line spacing

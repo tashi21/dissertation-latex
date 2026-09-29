@@ -1,0 +1,96 @@
+% =============================================================================
+% preamble/glossary.tex: abbreviations and glossary (glossaries-extra).
+%
+% WHAT YOU GET
+% Appendix A has two numbered sections, printed by
+% backmatter/appendix-glossary.tex:
+%   A.1 Abbreviations  short form -> long form   (e.g. MCP  Model Context Protocol)
+%   A.2 Glossary       term -> definition
+% Entries are defined in glossary/entries.tex. Only entries used somewhere
+% in the text are printed, alphabetically. Sorting is done by LaTeX itself
+% (\makenoidxglossaries), so no extra program is needed on Overleaf.
+%
+% USING ENTRIES IN THE TEXT (every use is a link to the appendix entry)
+%   \gls{mcp}          first use "Model Context Protocol (MCP)", later "MCP"
+%   \glspl{llm}        plural: first use "large language models (LLMs)"
+%   \Gls{...} \Glspl   capitalised first letter, for the start of a sentence
+%   \glsxtrshort{mcp}  always "MCP"
+%   \glsxtrlong{mcp}   always "Model Context Protocol"
+%   \glsxtrfull{mcp}   always "Model Context Protocol (MCP)"
+%   \gls{def-mcp}      "Model Context Protocol", linking to its definition
+%   \gls{rug-pull}     a glossary term, linking to its definition
+%   \glsfmtshort{mcp}  "MCP" in a chapter/section title or caption; there, \gls
+%                      would use up the first-use expansion and put links in
+%                      the table of contents
+%   \glsreset{mcp}     make the next \gls{mcp} expand again (e.g. per chapter)
+%
+% ABBREVIATION -> DEFINITION LINK
+% For an abbreviation that also needs a definition, \newtermabbr (defined
+% below) creates two linked entries. Its line in A.1 ends with
+% "(see definition)", which links to the definition in A.2.
+% =============================================================================
+
+% --- Package options ---------------------------------------------------------------------
+\usepackage[
+  abbreviations,               % create the separate "abbreviations" list (A.1)
+  nonumberlist,                % don't list page numbers after each entry
+  section    = section,        % print each list as a \section, so both sit
+                               % inside the appendix chapter
+  numberedsection = autolabel, % number those sections (A.1, A.2) and give each
+                               % a \label: \glsautoprefix + list name
+  toc        = false,          % numbered sections reach the table of contents
+                               % anyway; this avoids a duplicate entry
+  nogroupskip,                 % no extra gap between letter groups (A, B, ...)
+  stylemods,                   % load glossaries-extra's fixes to the list styles
+                               % (needed for the "(see definition)" hook below)
+]{glossaries-extra}
+
+\renewcommand*{\glsautoprefix}{app:}  % section labels become app:abbreviations
+                                      % (A.1) and app:main (A.2), for \cref
+\makenoidxglossaries                  % sort and print lists without makeindex
+
+% --- Appearance ----------------------------------------------------------------------------
+% long-short: first use prints "long form (SHORT)", later uses "SHORT".
+% Other styles: short-long ("SHORT (long form)"), long-short-sc (small caps).
+\setabbreviationstyle{long-short}             % ordinary abbreviations
+\setabbreviationstyle[termabbr]{long-short}   % abbreviations made by \newtermabbr
+                                              % (their own category, see below)
+\renewcommand*{\glsnamefont}[1]{\textbf{#1}}  % entry names in bold in both lists
+\setlength{\glsdescwidth}{0.75\linewidth}     % width of the long-form column in
+                                              % A.1 (the "long" list style)
+
+% --- \newtermabbr: abbreviation + definition, linked -----------------------------------------
+% Usage: \newtermabbr{label}{SHORT}{long form}{definition}
+% Creates:
+%   label      an abbreviation (A.1). Its "category" is set to termabbr so the
+%              two hooks below apply only to these entries.
+%   def-label  a glossary term (A.2) named "long form (SHORT)" with the
+%              definition; in the text \gls{def-label} prints just "long form".
+% #1..#4 are the four arguments in order.
+\newcommand{\newtermabbr}[4]{%
+  \newglossaryentry{def-#1}{name={#3 (#2)}, text={#3}, description={#4}}%
+  \newabbreviation[category=termabbr]{#1}{#2}{#3}%
+}
+
+% Helper commands for the hooks: add the definition entry to the Glossary,
+% and print the "(see definition)" link to it.
+\newcommand*{\addtermdefinition}[1]{\glsadd{def-#1}}
+\newcommand*{\linktermdefinition}[1]{%
+  \space(\emph{see} \glshyperlink[definition]{def-#1})}
+
+% Hook 1, runs after every \gls-type use of a termabbr abbreviation: also
+% mark its definition as used, so the definition always appears in A.2 and
+% the "(see definition)" link always has a target.
+% \glslabel holds the label just used; \expandafter turns it into its text
+% (e.g. "mcp") before the helper builds "def-mcp".
+\glsdefpostlink{termabbr}{\expandafter\addtermdefinition\expandafter{\glslabel}}
+
+% Hook 2, runs after the description of each termabbr entry in the printed
+% list: append "(see definition)". \glscurrententrylabel is the label of the
+% entry being printed.
+\glsdefpostdesc{termabbr}{%
+  \expandafter\linktermdefinition\expandafter{\glscurrententrylabel}}
+
+% --- Entries -------------------------------------------------------------------------------
+% Must come after the settings above.
+\input{glossary/entries}

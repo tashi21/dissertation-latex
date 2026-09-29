@@ -1,0 +1,103 @@
+% =============================================================================
+% preamble/layout.tex: page geometry, line spacing, headers/footers and
+% heading styles.
+%
+% Values you are likely to change (margins, line spacing) are in config.tex;
+% this file uses them. Font size is the 12pt option in main.tex.
+% =============================================================================
+
+% --- Page geometry --------------------------------------------------------------------
+\usepackage{geometry}
+\geometry{
+  a4paper,                  % 210 x 297 mm
+  margin     = \thesismargin, % same margin on all four sides (config.tex)
+  headheight = 15pt,        % room for the running header; fancyhdr warns if
+                            % this is too small for the header text
+}
+% For different margins per side, replace "margin" with e.g.
+%   top = 2.5cm, bottom = 2.5cm, left = 3cm, right = 2cm
+% (a wider left margin is common if the dissertation will be bound).
+
+% --- Line spacing and page breaking ------------------------------------------------------
+\usepackage{setspace}       % line spacing; keeps footnotes and float contents
+                            % (figures, tables, captions) single-spaced
+\thesislinespacing          % apply the body spacing chosen in config.tex
+\raggedbottom               % let pages end at slightly different heights instead
+                            % of stretching the space between paragraphs
+\widowpenalty=10000         % never leave the last line of a paragraph alone at
+                            % the top of a page ("widow")
+\clubpenalty=10000          % never leave the first line of a paragraph alone at
+                            % the bottom of a page ("orphan")
+
+% --- Headers and footers -------------------------------------------------------------------
+% fancyhdr defines "page styles": what goes in the header and footer.
+%   \fancyhf{}             clear all header and footer fields
+%   \fancyhead[L/C/R]{..}  left / centre / right of the header
+%   \fancyfoot[L/C/R]{..}  left / centre / right of the footer
+%   \headrulewidth         thickness of the line under the header (0pt = none)
+% \leftmark holds the current chapter ("Chapter 3. Literature Review");
+% \rightmark holds the current section. \thepage prints the page number in
+% the current style (i, ii, ... or 1, 2, ...), in the body font (see fonts.tex).
+\usepackage{fancyhdr}
+
+% "thesis" style, used for normal pages in the main matter: chapter name at
+% the top left, page number at the bottom centre, thin line under the header.
+\fancypagestyle{thesis}{%
+  \fancyhf{}%
+  \fancyhead[L]{\small\nouppercase{\leftmark}}% \nouppercase stops LaTeX's
+                                              % default ALL CAPS chapter headers
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+}
+
+% "plain" style, used automatically on the first page of every chapter and
+% on the front matter: page number only, no header.
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+\pagestyle{plain}                 % front matter: page numbers only
+\appto\mainmatter{\pagestyle{thesis}}  % switch to the header style when
+                                       % \mainmatter runs (in main.tex); \appto
+                                       % (from etoolbox) adds code to the end of
+                                       % an existing command
+
+% --- Heading styles ------------------------------------------------------------------------
+% titlesec controls how chapter and section titles look.
+% \titleformat{command}[shape]{format}{label}{sep}{before-title}
+%   shape         display = label on its own line above the title
+%                 block   = label and title on one line
+%   format        font applied to label and title
+%   label         what prints as the number ("Chapter 1")
+%   sep           space between label and title
+%   before-title  code applied to the title text only (here: its size)
+\usepackage{titlesec}
+
+% Numbered chapters: "Chapter 1" (Large, bold) above the title (huge, bold).
+% In the appendix \chaptertitlename becomes "Appendix", giving "Appendix A".
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{\Large\chaptertitlename\ \thechapter}{10pt}{\huge}
+
+% Unnumbered chapters (Acknowledgements, Abstract, Contents, lists,
+% References): title only.
+\titleformat{name=\chapter,numberless}[block]
+  {\normalfont\bfseries}{}{0pt}{\huge}
+
+% \titlespacing*{command}{left indent}{space above}{space below}
+% Default LaTeX puts a large gap above chapter titles; this removes it.
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+
+% Simpler form for sections: \titleformat*{command}{format}.
+% Sizes from large to small: \huge \LARGE \Large \large \normalsize.
+\titleformat*{\section}{\normalfont\Large\bfseries}          % 1.1
+\titleformat*{\subsection}{\normalfont\large\bfseries}       % 1.1.1
+\titleformat*{\subsubsection}{\normalfont\normalsize\bfseries} % unnumbered, see below
+
+% --- Numbering depth -------------------------------------------------------------------------
+% Levels: 0 = chapter, 1 = section, 2 = subsection, 3 = subsubsection.
+\setcounter{secnumdepth}{2}   % number headings down to subsections (1.2.3);
+                              % subsubsections get no number
+\setcounter{tocdepth}{2}      % list headings down to subsections in the
+                              % table of contents

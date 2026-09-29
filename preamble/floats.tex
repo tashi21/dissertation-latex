@@ -1,0 +1,43 @@
+% =============================================================================
+% preamble/floats.tex: figures, tables and algorithms ("floats": LaTeX moves
+% them to where they fit best, so refer to them by number, not "below").
+%
+% Numbering is per chapter: Figure 3.1, Table 3.1, Algorithm 3.1. The book
+% class does this for figures and tables; the [chapter] option below does it
+% for algorithms.
+%
+% Conventions used here (and in most CS dissertations):
+%   - table captions go ABOVE the table (put \caption before \begin{tabular})
+%   - figure captions go BELOW the figure (put \caption after \includegraphics)
+%   - put \label straight after \caption, so the label gets the right number
+% Example code for all three is in README.md.
+% =============================================================================
+
+% --- Captions ------------------------------------------------------------------------------
+\usepackage{caption}
+\captionsetup{
+  labelfont = bf,       % "Figure 3.1" in bold
+  labelsep  = colon,    % "Figure 3.1: Caption text"
+  font      = small,    % caption text one size smaller than body text
+}
+\captionsetup[table]{position=top}  % tells caption that table captions are
+                                    % above, so it puts the gap below them
+
+% --- Tables ---------------------------------------------------------------------------------
+\usepackage{booktabs}   % professional horizontal rules: \toprule, \midrule,
+                        % \bottomrule (avoid vertical lines in tables)
+\usepackage{tabularx}   % tabularx environment: table of a set total width with
+                        % X columns that wrap text and share the spare space
+\usepackage{array}      % extra column options, e.g. p{3cm} with
+                        % >{\raggedright\arraybackslash}
+
+% --- Algorithms -----------------------------------------------------------------------------
+% Two packages work together:
+%   algorithm      the floating box with a caption and number, and the
+%                  \listofalgorithms command used in frontmatter/lists.tex
+%   algpseudocode  the pseudocode itself inside \begin{algorithmic}:
+%                  \Require, \Ensure, \State, \If{..}..\EndIf, \For{..}..\EndFor,
+%                  \While, \Function{Name}{args}..\EndFunction, \Return, \Comment
+% \begin{algorithmic}[1] numbers every line; \label a line to \cref it.
+\usepackage[chapter]{algorithm}  % [chapter]: number algorithms per chapter
+\usepackage{algpseudocode}

@@ -1,0 +1,48 @@
+% =============================================================================
+% glossary/entries.tex: abbreviation and glossary entries.
+% Loaded at the end of preamble/glossary.tex (see that file for all the
+% commands you can use in the text).
+%
+% Only entries used in the text appear in Appendix A, sorted alphabetically,
+% so defining an entry you never use is harmless. Keep this file grouped by
+% kind and alphabetical by label so entries are easy to find.
+% The descriptions below are placeholders; replace them with your own wording.
+%
+% THE THREE KINDS OF ENTRY
+%
+% 1. Abbreviation only -> A.1 Abbreviations
+%      \newabbreviation{label}{SHORT}{long form}
+%    Write the long form in lower case unless it is a proper noun; \Gls
+%    capitalises it at the start of a sentence. Irregular plural:
+%      \newabbreviation[longplural={...}, shortplural={...}]{label}{SHORT}{long form}
+%
+% 2. Defined term only -> A.2 Glossary
+%      \newglossaryentry{label}{name={term}, description={definition}}
+%    Optional keys: plural={...} for an irregular plural; sort={...} to sort
+%    under a different spelling.
+%
+% 3. Abbreviation that also has a definition -> both lists, linked
+%      \newtermabbr{label}{SHORT}{long form}{definition}
+%    In the text, \gls{label} gives the abbreviation and \gls{def-label} the
+%    defined term. The A.1 line ends "(see definition)" and links to A.2.
+%
+% Labels: lower case, no spaces; hyphens are fine (e.g. rug-pull). The label
+% is only used in \gls{...}, never printed. Commas or "=" inside a value need
+% braces: description={a, b, and c}.
+% =============================================================================
+
+% --- 1. Abbreviations ----------------------------------------------------------------------
+\newabbreviation{ai}{AI}{artificial intelligence}
+\newabbreviation{llm}{LLM}{large language model}
+
+% --- 3. Abbreviations with a definition ------------------------------------------------------
+% The fourth argument (the definition) may start on the next line, as here,
+% but there must be no blank line between it and the third argument.
+\newtermabbr{mcp}{MCP}{Model Context Protocol}
+  {[Definition to be written.]}
+
+% --- 2. Defined terms ------------------------------------------------------------------------
+\newglossaryentry{rug-pull}{
+  name        = {rug pull},
+  description = {[Definition to be written.]},
+}

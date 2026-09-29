@@ -1,0 +1,68 @@
+% =============================================================================
+% frontmatter/cover.tex: cover page.
+%
+% Follows Warwick's "Student Thesis Cover - Instructions for LaTeX"
+% (_reference/Instructions for LaTeX.pdf):
+%   - crest at the top, wordmark at the bottom, everything centred
+%   - title: Aptos 20pt bold; "BY": 12pt capitals; name: 20pt; other text: 14pt
+% The cover uses the document font set in preamble/fonts.tex (Aptos where
+% the compiler supports it). The text comes from config.tex; edit it there,
+% not here.
+%
+% HOW IT WORKS
+% A TikZ picture with the "overlay" option draws on the page without taking
+% up space, and "remember picture" lets it use (current page.north) and
+% (current page.south), the centres of the top and bottom page edges, as
+% anchor points. Each \node is placed relative to one of those, so positions
+% are fixed on the paper regardless of margins. The distances were measured
+% from the example cover in the instructions PDF. Overlay positions need two
+% compile runs; Overleaf does this automatically.
+%
+% TO ADJUST
+%   move an item:   change its yshift (negative = further down from the top)
+%   resize a logo:  change width= in its \includegraphics
+%   title width:    text width=0.62\paperwidth (narrower = more lines)
+% =============================================================================
+
+\begin{titlepage}  % a page with no header, footer or page number
+\setstretch{1}     % single line spacing on the cover (body text uses 1.5)
+\begin{tikzpicture}[remember picture, overlay]
+
+  % Crest: top edge 20 mm below the top of the paper, 35 mm wide.
+  % anchor=north: the node's top-centre sits at the given point.
+  \node[anchor=north] at ([yshift=-20mm]current page.north)
+    {\includegraphics[width=35mm]{warwick-coat-of-arms}};  % assets/ folder
+
+  % Text block: top edge 120 mm below the top of the paper. A longer title
+  % pushes the rest of the block down without moving the logos.
+  % text width makes the node a fixed-width paragraph box, so \par, \vspace
+  % and automatic line wrapping work inside it.
+  \node[anchor=north, text width=0.62\paperwidth]
+    at ([yshift=-120mm]current page.north) {%
+      \centering
+      % \fontsize{size}{line distance}\selectfont sets an exact point size.
+      {\fontsize{20}{25}\selectfont\bfseries \covertitle\par}  % title, 20pt bold
+      \vspace{8pt}
+      {\fontsize{12}{15}\selectfont BY\par}                    % "BY", 12pt caps
+      \vspace{6pt}
+      {\fontsize{20}{25}\selectfont \thesisauthor\par}         % name, 20pt
+      \vspace{24pt}
+      {\fontsize{14}{19}\selectfont                            % remaining text, 14pt
+        A dissertation submitted in partial fulfilment of the\\
+        requirements for the degree of\par
+        \vspace{6pt}
+        \thesisdegree\par
+        \thesisdepartment\par
+        \vspace{12pt}
+        Supervisor: \thesissupervisor\par
+        \vspace{12pt}
+        \thesisdate\par}
+    };
+
+  % Wordmark: bottom edge 18 mm above the bottom of the paper, 65 mm wide.
+  % anchor=south: the node's bottom-centre sits at the given point.
+  \node[anchor=south] at ([yshift=18mm]current page.south)
+    {\includegraphics[width=65mm]{warwick-wordmark}};      % assets/ folder
+
+\end{tikzpicture}
+\end{titlepage}

@@ -1,0 +1,57 @@
+% =============================================================================
+% preamble/fonts.tex: document fonts.
+%
+% Warwick's cover instructions (_reference/Instructions for LaTeX.pdf) specify
+% Aptos, with Arial as the substitute. One family is used everywhere: cover,
+% headings, body text, headers and page numbers.
+%
+% HOW IT WORKS
+% Which fonts LaTeX can use depends on the compiler (Overleaf: Menu ->
+% Compiler), so the file checks which one is running (\iftutex, from iftex):
+%
+%  - pdfLaTeX (Overleaf's default): can only use fonts that come as LaTeX
+%    packages. Aptos and Arial are not available that way, so the document
+%    uses TeX Gyre Heros, a free Helvetica clone that looks very close to
+%    Arial and is included in every TeX installation.
+%
+%  - XeLaTeX or LuaLaTeX: can use any installed font by name, via fontspec.
+%    Tries Aptos, then Arial, then TeX Gyre Heros. A warning in the log says
+%    if a fallback was used.
+%
+% MATHS
+% Equations stay in the default Latin Modern maths font with either compiler.
+% =============================================================================
+
+\usepackage{iftex}   % provides \iftutex: true under XeLaTeX/LuaLaTeX, false
+                     % under pdfLaTeX
+
+\iftutex
+  % ---------------------------------------------- XeLaTeX / LuaLaTeX branch
+  \usepackage{fontspec}   % loads installed fonts by name
+  % \setmainfont  default text font (body text, \rmfamily)
+  % \setsansfont  sans-serif font (\sffamily); set to the same font so nothing
+  %               switches to a different sans font by accident
+  % \IfFontExistsTF{name}{if installed}{if not}: checks by font name.
+  \IfFontExistsTF{Aptos}{%
+    \setmainfont{Aptos}
+    \setsansfont{Aptos}
+  }{%
+    \IfFontExistsTF{Arial}{%
+      \setmainfont{Arial}
+      \setsansfont{Arial}
+      \PackageWarningNoLine{dissertation}{Aptos not found; using Arial}
+    }{%
+      \setmainfont{TeX Gyre Heros}
+      \setsansfont{TeX Gyre Heros}
+      \PackageWarningNoLine{dissertation}{Aptos and Arial not found; using TeX Gyre Heros}
+    }%
+  }
+\else
+  % ----------------------------------------------------------- pdfLaTeX branch
+  \usepackage[T1]{fontenc}   % modern font encoding: accented letters (é, ş, ø)
+                             % are real glyphs, so they hyphenate and copy-paste
+                             % correctly from the PDF
+  \usepackage{tgheros}       % TeX Gyre Heros as the sans-serif family
+  \renewcommand{\familydefault}{\sfdefault}  % make the sans-serif family the
+                                             % default for all text
+\fi

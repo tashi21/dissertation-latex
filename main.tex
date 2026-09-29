@@ -1,0 +1,94 @@
+% =============================================================================
+% main.tex: the root file. This is the file you compile.
+% Compiles with Overleaf's default compiler (pdfLaTeX); XeLaTeX and LuaLaTeX
+% also work (see preamble/fonts.tex for how the fonts differ).
+%
+% HOW THE TEMPLATE IS ORGANISED
+% This file only decides the ORDER of things. All settings live elsewhere:
+%   config.tex            your details (title, name, supervisor, ...) and a few
+%                         layout values (margins, line spacing, link colour)
+%   preamble/*.tex        package setup, one topic per file
+%   frontmatter/*.tex     cover, acknowledgements, abstract, contents/lists
+%   chapters/*.tex        one file per chapter
+%   backmatter/*.tex      reference list, appendices
+%   glossary/entries.tex  abbreviations and glossary terms
+%   references.bib        bibliography database
+%
+% \input{file}   pastes file.tex in at that point (use for small pieces and
+%                anything in the preamble).
+% \include{file} does the same but always starts a new page, and lets you
+%                compile only some chapters with \includeonly (see below).
+%                Use it for chapters and appendices only; it cannot be nested.
+%
+% COMPILE SEQUENCE (Overleaf does this automatically)
+% pdflatex -> biber (references) -> pdflatex -> pdflatex. The repeated runs let
+% the table of contents, cross-references, citations, glossary and cover
+% positions settle. "??" or "[?]" in the PDF usually means another run is
+% needed.
+% =============================================================================
+
+% Document class: "book" provides \frontmatter, \mainmatter and \appendix,
+% which give the roman-then-arabic page numbering and chapter handling.
+%   12pt     body text size (Warwick default; change to 11pt here if needed)
+%   a4paper  UK paper size
+%   oneside  single-sided PDF: identical left/right margins, no blank pages
+%   openany  chapters start on the next page, not necessarily a right-hand one
+\documentclass[12pt,a4paper,oneside,openany]{book}
+
+% ------------------------------------------------------------------ preamble
+% Order matters: config first (defines macros the others use), links near the
+% end (hyperref must load after most packages), glossary last (glossaries-extra
+% must load after hyperref).
+\input{config}               % your details and layout values
+\input{preamble/packages}    % general packages (language, maths, graphics)
+\input{preamble/fonts}       % fonts, depending on the compiler
+\input{preamble/layout}      % margins, spacing, headers, heading styles
+\input{preamble/floats}      % captions, tables, algorithms
+\input{preamble/references}  % IEEE citations with biblatex
+\input{preamble/links}       % hyperref and cleveref; keep after the files above
+\input{preamble/glossary}    % glossaries-extra must load after hyperref
+
+% Uncomment to compile only some chapters (faster while drafting); page and
+% reference numbers from the other chapters are kept from the last full run.
+% \includeonly{chapters/ch3-literature-review}
+
+\begin{document}
+
+% ---------------------------------------------------------------- front matter
+% The cover gets letter "page numbers" (A) that are never printed. This keeps
+% its internal page ID different from page i and page 1, so hyperref does
+% not warn about duplicate page destinations.
+\pagenumbering{Alph}
+\input{frontmatter/cover}
+
+% \frontmatter: page numbers restart at i, ii, iii, ... and chapters are
+% unnumbered. Order below is the order in the PDF.
+\frontmatter
+\input{frontmatter/acknowledgements}
+\input{frontmatter/abstract}
+\input{frontmatter/lists}    % table of contents, lists of tables/figures/algorithms
+
+% ----------------------------------------------------------------- main matter
+% \mainmatter: page numbers restart at 1 in arabic numerals, chapters are
+% numbered, and the running header is switched on (see preamble/layout.tex).
+% Each \include starts a new page, so every chapter opens on a fresh page.
+% To add a chapter: create chapters/ch5-name.tex starting with
+% \chapter{Title}\label{ch:name}, then add \include{chapters/ch5-name} here.
+\mainmatter
+\include{chapters/ch1-introduction}
+\include{chapters/ch2-background}
+\include{chapters/ch3-literature-review}
+\include{chapters/ch4-methodology}
+
+% ------------------------------------------------------------------ references
+% Printed after the last chapter and listed in the table of contents.
+\input{backmatter/references}
+
+% ------------------------------------------------------------------ appendices
+% \appendix: chapters from here on are lettered (Appendix A, B, ...) instead
+% of numbered. To add an appendix, create backmatter/appendix-name.tex
+% starting with \chapter{Title}\label{app:name} and \include it below.
+\appendix
+\include{backmatter/appendix-glossary}
+
+\end{document}

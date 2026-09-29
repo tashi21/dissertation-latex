@@ -1,0 +1,38 @@
+% =============================================================================
+% chapters/ch1-introduction.tex: Chapter 1.
+% Section headings follow drafts/outline-part1-intro-background-litreview.md.
+%
+% HOW A CHAPTER FILE WORKS (applies to every file in chapters/)
+% - The file is pulled in by \include in main.tex, which starts a new page.
+% - \chapter{Title} prints "Chapter 1" + title and starts the running header;
+%   \label{ch:...} right after it lets you write \cref{ch:introduction}
+%   ("Chapter 1") anywhere.
+% - \section / \subsection are numbered (1.1, 1.1.1) and listed in the table
+%   of contents; \subsubsection is unnumbered. Add \label{sec:...} after each
+%   one you want to refer to.
+% - A heading that needs an abbreviation: \section{Why \glsfmtshort{mcp} ...}
+%   (plain "MCP" also works but won't count as a use of the glossary entry).
+% - Starred versions (\section*{...}) are unnumbered and not in the contents.
+% - Citations: \cite{kumar2018rev2}, \cite[p.~3]{key} (keys: references.bib).
+%   Glossary: \gls{mcp} (entries: glossary/entries.tex).
+%   Figures, tables, algorithms: see README.md.
+% - A blank line starts a new paragraph; a single line break does not.
+% - % starts a comment; to print a percent sign write \%.
+%   Other characters that need a backslash: \& \# \_ \$ \{ \}.
+% =============================================================================
+
+\chapter{Introduction}\label{ch:introduction}
+
+\section{Agentic AI systems and the Model Context Protocol}\label{sec:intro-mcp}
+
+\section{Why trusting an MCP server is a problem}\label{sec:intro-trust-problem}
+
+\section{Accumulated reputation: a remedy with a known weakness}\label{sec:intro-reputation}
+
+\section{Aim, research question and sub-question}\label{sec:intro-rq}
+
+\section{Scope and assumptions}\label{sec:intro-scope}
+
+\section{Contributions}\label{sec:intro-contributions}
+
+\section{Structure of the dissertation}\label{sec:intro-structure}
