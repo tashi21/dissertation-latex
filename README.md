@@ -3,7 +3,7 @@
 ## Overleaf setup
 
 1. This repository is the Overleaf project (synced via git); `main.tex` is the root file.
-2. Overleaf's default compiler (pdfLaTeX) works; the text is then set in TeX Gyre Heros, a close match to Arial. Under XeLaTeX or LuaLaTeX (Menu → Compiler) the document uses Aptos by name, falling back to Arial and then TeX Gyre Heros. Details in `preamble/fonts.tex`.
+2. Compile with **XeLaTeX** (Menu → Compiler). Aptos is loaded from the font files in `assets/font-aptos/`, so that folder must be in the project. Details in `preamble/fonts.tex`.
 3. Recompile once more if the cover logos or glossary links look misplaced; both need two passes.
 
 The chapters start empty, so References and Appendix A stay empty until something is cited or used. To check the setup on the first compile, paste this into Chapter 1 temporarily:
@@ -30,7 +30,7 @@ Expected: "Model Context Protocol (MCP)" on first use and "MCP" after; [1] and [
 
 ## Citing (IEEE)
 
-`references.bib` holds every source exported in `citations/` (41 entries), checked against Crossref and arXiv. Keys are first-author surname + year + first title word, e.g. `kumar2018rev2`, `hou2026model`, `page1954continuous`; the file is sorted by key. Only cited entries are printed.
+Entries go in `references.bib`. Keys are first-author surname + year + first title word, e.g. `kumar2018rev2`, `hou2026model`, `page1954continuous`; the file is sorted by key. Only cited entries are printed.
 
 | Write | Get |
 | --- | --- |
