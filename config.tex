@@ -1,10 +1,9 @@
 % =============================================================================
-% config.tex: everything specific to you, in one place.
+% config.tex: everything specific in one place.
 %
-% Each line defines a command (a "macro") that the rest of the template uses.
-% \newcommand{\name}{text} means: wherever \name appears, print "text".
-% Edit only the text inside the SECOND pair of braces; leave the \name alone,
-% because other files refer to it.
+% Each line defines a macro that the rest of the template uses.
+% \newcommand{\name}{text}: wherever \name appears, print "text".
+% Edit only the text inside the SECOND pair of braces; leave the \name alone, because other files refer to it.
 %
 % Where each value is used:
 %   \thesistitle       PDF metadata (title shown in the PDF viewer)
@@ -20,14 +19,10 @@
 % =============================================================================
 
 % --- Title -------------------------------------------------------------------
-% Plain title with no formatting commands and no \\ line breaks: PDF metadata
-% can only hold plain text. This is a working title; change it freely.
+% Plain title with no formatting commands and no \\ line breaks:
 \newcommand{\thesistitle}{Detecting Rug-Pull Behaviour in MCP Servers with Windowed REV2 Trust Scores}
 
-% Title as printed on the cover. By default it is the same text, wrapped
-% automatically to 2-3 lines. To choose the line breaks yourself, replace
-% \thesistitle with the title typed out and \\ where each line should end, e.g.
-%   \newcommand{\covertitle}{Detecting Rug-Pull Behaviour\\ in MCP Servers ...}
+% Title as printed on the cover. By default it is the same text, wrapped automatically to 2-3 lines.
 \newcommand{\covertitle}{\thesistitle}
 
 % --- People and programme ------------------------------------------------------
@@ -35,12 +30,9 @@
 \newcommand{\thesisdegree}{MSc Cyber Security Management}
 \newcommand{\thesisdepartment}{Warwick Manufacturing Group (WMG)}
 \newcommand{\thesissupervisor}{Muhammad Ajmal Azad}
-\newcommand{\thesisdate}{September 2026}   % submission month and year
+\newcommand{\thesisdate}{October 2026} % submission month and year
 
 % --- Layout ---------------------------------------------------------------------
-% Font size is not here: it is the "12pt" option on the \documentclass line in
-% main.tex (allowed values: 10pt, 11pt, 12pt).
-
 % Page margins on all four sides. Any LaTeX length works: 2.5cm, 25mm, 1in.
 \newcommand{\thesismargin}{2.5cm}
 
@@ -53,8 +45,7 @@
 \newcommand{\thesislinespacing}{\onehalfspacing}
 
 % --- Links ----------------------------------------------------------------------
-% Colour of citations, cross-references, glossary links and URLs. "linkblue"
-% is defined in preamble/packages.tex. Use "black" for a printed copy (links
+% Colour of citations, cross-references, glossary links and URLs. "linkblue" is defined in preamble/packages.tex. Use "black" for a printed copy (links
 % still work in the PDF, they just aren't coloured). Any xcolor name also
 % works (e.g. "blue", "NavyBlue").
 \newcommand{\thesislinkcolour}{linkblue}

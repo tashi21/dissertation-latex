@@ -1,27 +1,7 @@
 % =============================================================================
 % frontmatter/cover.tex: cover page.
 %
-% Follows Warwick's "Student Thesis Cover - Instructions for LaTeX"
-% (_reference/Instructions for LaTeX.pdf):
-%   - crest at the top, wordmark at the bottom, everything centred
-%   - title: Aptos 20pt bold; "BY": 12pt capitals; name: 20pt; other text: 14pt
-% The cover uses the document font set in preamble/fonts.tex (Aptos where
-% the compiler supports it). The text comes from config.tex; edit it there,
-% not here.
-%
-% HOW IT WORKS
-% A TikZ picture with the "overlay" option draws on the page without taking
-% up space, and "remember picture" lets it use (current page.north) and
-% (current page.south), the centres of the top and bottom page edges, as
-% anchor points. Each \node is placed relative to one of those, so positions
-% are fixed on the paper regardless of margins. The distances were measured
-% from the example cover in the instructions PDF. Overlay positions need two
-% compile runs; Overleaf does this automatically.
-%
-% TO ADJUST
-%   move an item:   change its yshift (negative = further down from the top)
-%   resize a logo:  change width= in its \includegraphics
-%   title width:    text width=0.62\paperwidth (narrower = more lines)
+% The cover uses the document font set in preamble/fonts.tex. The text comes from config.tex.
 % =============================================================================
 
 \begin{titlepage}  % a page with no header, footer or page number

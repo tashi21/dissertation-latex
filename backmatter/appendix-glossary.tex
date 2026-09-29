@@ -1,23 +1,10 @@
 % =============================================================================
 % backmatter/appendix-glossary.tex: Appendix A, Glossary and Abbreviations.
 %
-% Because this file comes after \appendix in main.tex, \chapter prints
-% "Appendix A". Each \printnoidxglossary below becomes a numbered section
-% (A.1, A.2) holding one list, generated from glossary/entries.tex (settings
-% in preamble/glossary.tex). Only entries used in the text are printed; a
-% list with no used entries prints nothing.
-%
 % Referencing from the text:
 %   \cref{app:glossary}       "Appendix A"
 %   \cref{app:abbreviations}  "Appendix A.1"
 %   \cref{app:main}           "Appendix A.2"
-%
-% Options of \printnoidxglossary:
-%   type   which list: \glsxtrabbrvtype = abbreviations, main = glossary terms
-%   title  section heading
-%   style  layout: long    = two-column table (short form | long form)
-%                  altlist = name on its own line, definition indented below
-%          Other styles: https://ctan.org/pkg/glossaries (glossary style list)
 % =============================================================================
 
 \chapter{Glossary and Abbreviations}\label{app:glossary}

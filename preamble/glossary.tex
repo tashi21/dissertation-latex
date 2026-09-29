@@ -1,28 +1,17 @@
 % =============================================================================
 % preamble/glossary.tex: abbreviations and glossary (glossaries-extra).
 %
-% WHAT YOU GET
-% Appendix A has two numbered sections, printed by
-% backmatter/appendix-glossary.tex:
-%   A.1 Abbreviations  short form -> long form   (e.g. MCP  Model Context Protocol)
-%   A.2 Glossary       term -> definition
-% Entries are defined in glossary/entries.tex. Only entries used somewhere
-% in the text are printed, alphabetically. Sorting is done by LaTeX itself
-% (\makenoidxglossaries), so no extra program is needed on Overleaf.
-%
 % USING ENTRIES IN THE TEXT (every use is a link to the appendix entry)
-%   \gls{mcp}          first use "Model Context Protocol (MCP)", later "MCP"
-%   \glspl{llm}        plural: first use "large language models (LLMs)"
-%   \Gls{...} \Glspl   capitalised first letter, for the start of a sentence
-%   \glsxtrshort{mcp}  always "MCP"
-%   \glsxtrlong{mcp}   always "Model Context Protocol"
-%   \glsxtrfull{mcp}   always "Model Context Protocol (MCP)"
-%   \gls{def-mcp}      "Model Context Protocol", linking to its definition
-%   \gls{rug-pull}     a glossary term, linking to its definition
-%   \glsfmtshort{mcp}  "MCP" in a chapter/section title or caption; there, \gls
-%                      would use up the first-use expansion and put links in
-%                      the table of contents
-%   \glsreset{mcp}     make the next \gls{mcp} expand again (e.g. per chapter)
+%   \gls{mcp}: first use "Model Context Protocol (MCP)", later "MCP"
+%   \glspl{llm}: plural: first use "large language models (LLMs)"
+%   \Gls{...} \Glspl: capitalised first letter, for the start of a sentence
+%   \glsxtrshort{mcp}: always "MCP"
+%   \glsxtrlong{mcp}: always "Model Context Protocol"
+%   \glsxtrfull{mcp}: always "Model Context Protocol (MCP)"
+%   \gls{def-mcp}: "Model Context Protocol", linking to its definition
+%   \gls{rug-pull}: a glossary term, linking to its definition
+%   \glsfmtshort{mcp}: "MCP" in a chapter/section title or caption; there, \gls would use up the first-use expansion and put links in the table of contents
+%   \glsreset{mcp}: make the next \gls{mcp} expand again (e.g. per chapter)
 %
 % ABBREVIATION -> DEFINITION LINK
 % For an abbreviation that also needs a definition, \newtermabbr (defined
