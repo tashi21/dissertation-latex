@@ -1,32 +1,33 @@
 % =============================================================================
-% frontmatter/lists.tex: table of contents, then the lists of tables, figures and algorithms.
+% frontmatter/lists.tex: table of contents, then the lists of tables, figures and algorithms, running on one after another (no new page between them).
 %
 % The lists are generated from \caption commands (tables, figures, algorithms) and headings (contents), via auxiliary files written on the previous compile run, so new items appear after the next run.
 % =============================================================================
 
-\begingroup          % start a group: the spacing change below stays inside it
+\clearpage           % the contents start on a new page after the abstract
+
+\begingroup          % start a group: the changes below stay inside it
 \setstretch{1}       % lists are single-spaced even though body text is 1.5
+\let\clearpage\relax % each list heading is an unnumbered \chapter*, which normally starts a new page; disabling \clearpage inside this group keeps the lists on the same page. Chapter 1 still starts a new page because \mainmatter comes after the group ends.
 
 \tableofcontents     % "Contents"; not listed in itself
 
 % Each block below:
-%   \clearpage            finish the previous list's page
-%   \phantomsection       invisible anchor so the ToC link jumps to this page
+%   \vspace{...}          gap above the next list heading (chapter headings have no space above them in this template)
+%   \phantomsection       invisible anchor so the ToC link jumps to this spot
 %   \addcontentsline{toc}{chapter}{title}  add a chapter-level ToC entry
-%   \listof...            print the list (starts with an unnumbered chapter
-%                         heading on the fresh page)
-% The ToC entry is added before the list so it records the right page.
+%   \listof...            print the list
 
-\clearpage\phantomsection
+\vspace{2\baselineskip}\phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}      % "List of Tables"
 \listoftables
 
-\clearpage\phantomsection
+\vspace{2\baselineskip}\phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}     % "List of Figures"
 \listoffigures
 
-\clearpage\phantomsection
+\vspace{2\baselineskip}\phantomsection
 \addcontentsline{toc}{chapter}{\listalgorithmname}  % "List of Algorithms"
 \listofalgorithms                                   % from the algorithm package
 
-\endgroup            % back to the body line spacing
+\endgroup            % back to normal spacing and page breaks

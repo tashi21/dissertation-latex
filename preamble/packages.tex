@@ -7,8 +7,7 @@
 %   fonts.tex (fonts), layout.tex (geometry, setspace, fancyhdr, titlesec),
 %   floats.tex (caption, booktabs, algorithm), references.tex (biblatex),
 %   links.tex (hyperref, cleveref), glossary.tex (glossaries-extra).
-% Everything here works with pdfLaTeX (Overleaf's default), XeLaTeX and
-% LuaLaTeX; only fonts.tex behaves differently per compiler.
+% The document is compiled with XeLaTeX (needed by fontspec in fonts.tex).
 % =============================================================================
 
 % --- Language and quotation marks ---------------------------------------------------
@@ -37,7 +36,7 @@
 % --- Typography ------------------------------------------------------------------------
 \usepackage{microtype}    % small spacing adjustments for more even text and
                           % fewer bad line breaks: character protrusion (margin
-                          % kerning) and, under pdfLaTeX, slight font expansion
+                          % kerning)
 \usepackage{xurl}         % lets long URLs (e.g. in references) break at any
                           % character instead of running into the margin; must
                           % load before hyperref
