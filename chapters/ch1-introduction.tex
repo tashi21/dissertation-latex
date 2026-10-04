@@ -7,7 +7,7 @@
 % - \section / \subsection are numbered (1.1, 1.1.1) and listed in the table of contents; \subsubsection is unnumbered. Add \label{sec:...} after each one you want to refer to.
 % - A heading that needs an abbreviation: \section{Why \glsfmtshort{mcp} ...} (plain "MCP" also works but won't count as a use of the glossary entry).
 % - Starred versions (\section*{...}) are unnumbered and not in the contents.
-% - Citations: \cite{kumar2018rev2}, \cite[p.~3]{key} (keys: references.bib).
+% - Citations: \cite{Kumar2018}, \cite[p.~3]{key} (keys: references.bib).
 %   Glossary: \gls{mcp} (entries: glossary/entries.tex).
 %   Figures, tables, algorithms: see README.md.
 % - A blank line starts a new paragraph; a single line break does not.
@@ -16,3 +16,112 @@
 % =============================================================================
 
 \chapter{Introduction}\label{ch:introduction}
+
+% =============================================================================
+\section{Agentic \glsfmtshort{ai} systems and the Model Context Protocol}\label{sec:agentic-mcp}
+
+\Gls{llm} agents no longer only generate text. Given access to external tools, they can retrieve live data, perform computations and act on external systems~\cite[p.~2]{Hou2026}. This access widens what an agent can do, and it widens what can go wrong. Ruan et al. observe that tool use amplifies risks \enquote{such as leaking private data or causing financial losses}~\cite[p.~1]{Ruan2024}. Across 144 test cases in their emulated sandbox, even the safest agent they tested failed with potentially severe outcomes 23.9\% of the time, according to their automatic evaluator~\cite[p.~1]{Ruan2024}.
+
+Until recently, connecting an agent to a tool meant integrating each service separately. Developers defined the interface, authentication and execution logic for every service, and function-calling mechanisms differed between platforms~\cite[p.~2]{Hou2026}. The \gls{mcp}, launched by Anthropic in late 2024, standardises how \gls{ai} applications define, discover and invoke external tools~\cite[p.~2]{Hou2026}. The \gls{ai} application acts as an \gls{mcp} client and communicates with \gls{mcp} servers, which give it a unified interface for tool access~\cite[p.~4]{Hou2026}.
+
+Adoption has been rapid. Hou et al. describe integrations by OpenAI, Cursor and Cloudflare, and catalogue 26 major community-driven \gls{mcp} collections, among them websites, GitHub repositories and desktop applications, several of which host thousands of servers~\cite[pp.~11–13]{Hou2026}. By August 2025, three widely used aggregation platforms, Smithery.ai, MCP.so and Glama, listed over 6,000, 16,000 and 8,000 servers respectively~\cite[p.~2411]{Song2026}. A National Security Agency advisory calls \gls{mcp} \enquote{the de facto standard} for communication between \gls{ai}-driven services, and warns that its \enquote{rapid proliferation has outpaced the development of its security model}~\cite[p.~1]{NSA2026}. \Gls{mcp} has therefore made it routine for an agent to rely on a server that a third party wrote and maintains.
+
+% =============================================================================
+\section{Why trusting an \glsfmtshort{mcp} server is a problem}\label{sec:untrusted-server}
+
+An \gls{mcp} server is trusted twice, once by the model that uses it and once by the user who installs it, and neither check is reliable. Song et al. found high attack success rates and low refusal rates when malicious servers were connected to mainstream \glspl{llm}. They describe this as \enquote{a fundamental trust paradox: LLMs inherently trust tool outputs, which allows them to complete tasks effectively, but they struggle to detect malicious intent within tool descriptions}~\cite[p.~2423]{Song2026}. An earlier benchmark of 30 tool-integrated agents points the same way: a ReAct-prompted GPT-4 agent was vulnerable to instructions embedded in the external content it processed 24\% of the time~\cite[p.~10471]{Zhan2024}.
+
+The check at installation is no stronger. Song et al. uploaded malicious servers to the same three platforms, and all three accepted them without resistance. In a user study with 20 participants, participants consistently struggled to identify the malicious servers, and the platforms themselves applied only basic auditing~\cite[p.~2411]{Song2026}. Hou et al. report that MCP.so, the earliest \gls{mcp} market, \enquote{lacks formal security or identity verification mechanisms}~\cite[p.~11]{Hou2026}. Some platforms, such as mcp-get, do verify and sign servers, but the number of verified servers remains very small~\cite[p.~12]{Hou2026}.
+
+The harm a malicious server can cause is well documented. Song et al. showed that attacks through malicious servers can access private files and control devices to transfer digital assets~\cite[p.~2410]{Song2026}. Sun et al. demonstrated a memory-stealing attack in which a malicious server systematically extracts user–agent interaction data belonging to other \gls{mcp} servers~\cite[p.~177]{Sun2025}. More generally, Greshake et al. showed that \gls{llm}-integrated applications \enquote{blur the line between data and instructions}, so adversaries can steer them by planting prompts in content retrieved at inference time~\cite[p.~79]{Greshake2023}.
+
+This dissertation is concerned with a server that is not malicious when it is first trusted. Hou et al. describe a rug pull as occurring \enquote{when an apparently benign MCP server, initially functioning as advertised, is later surreptitiously altered by its maintainer to introduce malicious code or terminate safe functionality}~\cite[p.~19]{Hou2026}. Song et al. demonstrate a variant in which the server \enquote{initially is benign to gain user trust, but later modifies the tool description to embed malicious instructions}~\cite[p.~2414]{Song2026}. The danger, in Hou et al.’s words, is \enquote{temporal stealth, in which the malicious logic is introduced only after a trust relationship has been established}, and a single compromised server can affect many users at once~\cite[p.~19]{Hou2026}. The ecosystem does little to expose such a change. Aggregation platforms link to external code repositories rather than hosting the code themselves, and Song et al. found that this design \enquote{allows attackers to implement Rug Pull Attacks by modifying repositories after initial platform approval}~\cite[p.~2415]{Song2026}. A server can therefore pass a platform’s review while benign and turn malicious afterwards without being reviewed again~\cite[p.~2415]{Song2026}.
+
+The pattern is older than \gls{mcp}, and reputation research has names for it. Hoffman et al. note that attackers who \enquote{behave honestly for an initial period of time to build up a positive reputation before starting the self-serving attack} are known as traitors~\cite[p.~1:13]{Hoffman2009}. Zhang et al. describe an opportunistic service attack in which an attacker first provides good service to accumulate trust, and \enquote{once its reputation reaches a high level, it begins to behave maliciously}~\cite[p.~12]{Zhang2025}. Ruohomaa et al. give a well-behaved service that \enquote{turns malicious to cash in its good reputation} as the \enquote{classical example} of an unexpected change in behaviour~\cite[p.~19]{Ruohomaa2011}. This one-way shift differs from a cyclic attack, in which a malicious agent repeatedly regains high trust through cooperation and then abuses it~\cite[p.~842]{Salehi-Abari2010}. In both, the attacker exploits its reputation, which is the defence examined next.
+
+% =============================================================================
+\section{Accumulated reputation and its weakness}\label{sec:reputation}
+
+Reputation systems judge a party by the experience of those who have dealt with it. As Jøsang et al. put it, the idea is \enquote{to let parties rate each other, for example after the completion of a transaction, and use the aggregated ratings about a given party to derive a trust or reputation score}~\cite[p.~618]{Jsang2007}. Reputation has already been proposed as a control for \gls{llm} agents. A recent survey, not yet peer reviewed, describes schemes in which an \gls{llm} whose reputation \enquote{falls below a predefined threshold} is isolated or given lower priority~\cite[p.~25]{Liu2025}.
+
+Reputation accumulated over a long history, however, has a documented weakness against the threat described in \cref{sec:untrusted-server}. Hoffman et al. warn that when a formulation \enquote{relies exclusively on long-term history without discriminating between old and recent actions}, an attacker with a good record can carry out short attacks \enquote{with little risk of negative consequences as the previous history will heavily outweigh current actions}~\cite[p.~1:13]{Hoffman2009}. Giving recent evidence more weight does not remove the problem on its own. Salehi-Abari and White proved that malicious agents with cyclical behaviour can exploit four trust models \enquote{regardless of the model’s parameters}~\cite[p.~847]{Salehi-Abari2010}, and two of those models, Regret and FIRE, already weight ratings by how recent they are~\cite[p.~843]{Salehi-Abari2010}.
+
+REV2~\cite{Kumar2018}, the rating-graph algorithm on which this dissertation builds, addresses a different weakness of simple aggregation. Its authors note that \enquote{simple measures like a product’s average or median scores can easily be manipulated by giving ratings using multiple fake accounts}~\cite[p.~335]{Kumar2018}. REV2 therefore scores users, ratings and products jointly: \enquote{a fair user should give ratings that are close in score to the goodness of the product, and good products should get highly positive reliable ratings}~\cite[p.~333]{Kumar2018}. Of the 150 users it flagged as most unfair on Flipkart, 127 were confirmed as involved in fraud~\cite[p.~333]{Kumar2018}. That evaluation concerns fraudulent users; using a product’s goodness as the trust score of an \gls{mcp} server is an extension that this dissertation tests. The three scores are, however, computed together over the whole rating graph they are given. On this dissertation’s reading, the formulation as configured here, without its behavioural component, has nothing that recognises that an entity’s behaviour changed partway through its history. It follows that a server with a long, well-rated past can be expected to keep a high goodness score for some time after it turns malicious.
+
+% =============================================================================
+\section{Existing responses and the research gap}\label{sec:gap}
+
+Three strands of work bear on this problem, and none addresses it fully. The first is \gls{mcp} security research. In the \gls{mcp} literature reviewed here, defences examine server code or single executions. Hou et al. recommend version pinning, reproducible builds and cryptographic signature verification of server code, together with client-side update transparency and runtime monitoring \enquote{to enable users to detect when a previously trusted MCP server has turned malicious}~\cite[p.~19]{Hou2026}. Connor, the detector proposed by Huang et al. in a preprint, checks a tool’s behaviour during execution against the function intent extracted from its declaration. Its authors note that malicious logic not exercised at runtime may evade it~\cite[pp.~1, 25]{Huang2026}. Hou et al. also mention reputation-based trust scoring, but only in passing and for \gls{mcp} auto-installers~\cite[p.~22]{Hou2026}. None of these defences uses evidence accumulated from clients’ experience of a server over time. The timing of a rug pull is why such evidence matters: a check at approval or installation examines the server before it changes, and a check of single executions sees only the behaviour those executions exercise. This dissertation’s premise is that ratings gathered from many clients over time can register harm that appears only after the change, or only for some clients.
+
+The second strand is the trust literature, which has several mechanisms for behaviour change, all operating on a scalar reputation value held for each trustee. The simplest discount or discard old evidence; Player and Griffiths describe forgetting factors and sliding windows as the \enquote{limited techniques} that existing models use~\cite[p.~1]{Player2020}. Others adapt the window: PeerTrust switches to a smaller time window \enquote{to reflect the peer’s most recent behavior when the peer is dropping its performance over a threshold}~\cite[p.~849]{LiXiong2004}. A third group detects the change explicitly, as Parhizkar et al. do with Page–Hinkley statistics within a Beta reputation system, to dismiss an agent whose behaviour worsens~\cite[p.~1]{Parhizkar2022}.
+
+The third strand concerns rating graphs, where time has entered through new learned models. BurstBGN encodes timestamped rating activity in a bipartite graph neural network, designed to learn from a limited quantity of annotated data~\cite[p.~834]{Lu2024}. DGTEN, a preprint, models both abrupt and gradual changes in trust and is evaluated against on–off attacks on the Bitcoin trust networks that REV2 also used~\cite[pp.~1, 11]{Usman2025}. Because these models replace the scoring model itself, their results do not isolate what time windows alone contribute to an existing score. Keeping REV2 unchanged also keeps a practical property: REV2 can run unsupervised, when no training labels are present~\cite[p.~334]{Kumar2018}, so the mechanism needs no labelled examples of malicious servers.
+
+Any mechanism that reacts to recent evidence must also decide how large a change is real. Hoffman et al. note that giving more weight to recent negative behaviour \enquote{facilitates quick detection when a node becomes a traitor}. They add that, without protection against false rumours, the same technique lets malicious nodes prevent honest ones from using the system~\cite[p.~1:18]{Hoffman2009}. Forgiveness fails in the opposite direction: a malicious node that disguises its attacks as temporary errors can exploit a redemption scheme~\cite[p.~1178]{Chae2015}. Benign behaviour also varies. All seven real-world false positives reported for Connor came from genuine behavioural deviations in benign servers~\cite[p.~25]{Huang2026}. Ruohomaa et al., who divide a reputation history into epochs of internally consistent behaviour, guard against overreaction by requiring repeated evidence before a new epoch begins: \enquote{a single experience out of the ordinary does not yet change the epoch}~\cite[pp.~19, 27]{Ruohomaa2011}.
+
+Taken together, these strands leave a specific gap. In the literature reviewed for this dissertation, supplemented by a targeted search in September 2026 for applications of REV2 and similar rating-graph scores to time windows, no work compares historical and recent scores from a jointly computed rating-graph model while leaving the model unchanged, and none calibrates such a comparison for \gls{mcp} servers. The nearest prior work is PeerTrust, which compares time windows on a scalar model~\cite{LiXiong2004}, and DGTEN, a graph-based trust model that learns temporal features to resist on–off attacks~\cite{Usman2025}.
+
+% =============================================================================
+\section{Aim, research question and sub-question}\label{sec:aim}
+
+This dissertation proposes REV2 as a way to compute trust scores for \gls{mcp} servers from the ratings their clients give. Its aim is to show whether computing those scores over time windows reflects a server’s turn to malicious behaviour better than a single score over its whole history, so that a long record of good ratings does not mask recent low ones. To that end, it designs and evaluates a window-based mechanism that computes a server’s REV2 goodness separately over a historical and a recent window of the rating graph. When the recent score has dropped below the historical score by more than a calibrated threshold, the mechanism reports the recent score in place of the historical one. For both this mechanism and the whole-history baseline, detection is judged on the trust score reported for a server. \Cref{ch:methodology} defines when a reported score counts as detecting a malicious server, and the measures used: how many malicious servers are detected, how soon after they turn malicious, and how many benign servers are wrongly flagged.
+
+The dissertation addresses the following research question:
+
+\begin{quote}
+  \textbf{RQ:} To what extent does computing REV2 trust scores separately over historical and recent rating-history windows improve detection of \gls{mcp} servers that behave benignly to gain trust before exhibiting malicious behaviour, compared to computing a single REV2 trust score over the complete rating history, under simulated rating scenarios?
+\end{quote}
+
+The tension described in \cref{sec:gap}, between reacting quickly and reacting to noise, makes the threshold the mechanism’s central parameter. The sub-question addresses it:
+
+\begin{quote}
+  \textbf{SQ:} Within the windowed mechanism, what delta threshold — the magnitude of divergence between historical and recent trust scores — best separates malicious-behaviour shifts from benign score fluctuation?
+\end{quote}
+
+The dissertation pursues seven objectives:
+
+\begin{itemize}
+  \item \textbf{O1:} Describe the rug-pull threat and existing approaches to behaviour change in trust assessment.
+  \item \textbf{O2:} Derive from the literature the options for how the two windows relate, how long they are and how the delta is computed, and decide which to settle by argument and which to test.
+  \item \textbf{O3:} Implement Laplace-smoothed REV2 over the whole history as the baseline.
+  \item \textbf{O4:} Implement the time-windowed mechanism that reacts only to drops.
+  \item \textbf{O5:} Build simulated rating scenarios.
+  \item \textbf{O6:} Compare the windowed mechanism with the baseline on detection rate, detection delay and false alarms on benign servers (RQ).
+  \item \textbf{O7:} Calibrate the delta threshold and test how it transfers across scenarios (SQ).
+\end{itemize}
+
+% =============================================================================
+\section{Scope and assumptions}\label{sec:scope}
+
+REV2 is mapped onto \gls{mcp} as follows. Clients, or the agents acting for them, take the role of REV2’s users. \gls{mcp} servers take the role of products, and a server’s trust score is its goodness $G(p)$. REV2 is used with Laplace smoothing and fixed priors, and without its behavioural component. Windows are defined by time and cover the whole rating graph, so all three scores in a window are computed from that window’s ratings alone. Section 2.3 gives the configuration, Section 3.3 the reasons for it, and Section 3.5 the reasons for windowing the whole graph.
+
+The primary threat is a one-way shift: a server that behaves benignly and then turns malicious, as in the rug pull described in \cref{sec:untrusted-server}. Two related patterns, cyclic on–off behaviour and gradual poisoning, are treated as stress conditions rather than primary targets (Section 3.2).
+
+The evaluation uses simulated rating scenarios. Simulation fixes the moment a server turns malicious, and detection delay cannot be measured without knowing that moment. As Gama et al. note, \enquote{Drifts need to be known; synthetic data is suitable for assessing this aspect}~\cite[p.~44:26]{Gama2014}. The cost is ecological validity: the results describe how the mechanism behaves under the simulated rating models, and they may not carry over directly to real rating behaviour.
+
+Three further assumptions bound what the mechanism can do:
+
+\begin{itemize}
+  \item \textbf{Rating premise.} The dissertation assumes that a rating system is already in use, with enough active raters, in which clients rate the servers they use after interacting with them, much as buyers rate sellers on online marketplaces~\cite{Jsang2007}. How such a system is adopted, and how raters are recruited, is outside its scope. A rating records whether an interaction went right or wrong from a security point of view, as far as the user or agent could tell, not how useful the tool was. The rating scale therefore needs only to express a simple range from secure, through slightly insecure, to insecure, although it need not be limited to three values. This premise does not contradict \cref{sec:untrusted-server}, which shows that neither the model nor the user reliably recognises a malicious server at the point of use or installation. A rating does not require that recognition; it needs only the consequences that some clients notice afterwards. Such ratings are partial and noisy, which is one reason REV2’s weighting of raters by fairness matters here. None of the \gls{mcp} studies reviewed here reports a shared rating system for servers, so the premise describes an intended deployment, not current practice.
+  \item \textbf{Observability.} The mechanism can respond only to malicious behaviour that shows up in ratings, and some attacks are designed not to. In the memory-stealing attack, \enquote{from the LLM agent’s perspective, it initiates a single, regular tool call request}~\cite[p.~179]{Sun2025}. Behaviour disguised in this way is a limitation of the approach. The simulated scenarios therefore state how malicious behaviour becomes visible to raters.
+  \item \textbf{Complementarity.} The mechanism is intended to work alongside code-level defences and execution-time detectors such as Connor~\cite{Huang2026}, not to replace them, in the way that marketplace ratings sit alongside a platform’s own checks. It draws on evidence those defences do not use: the accumulated experience of a server’s clients.
+\end{itemize}
+
+% =============================================================================
+\section{Contributions}\label{sec:contributions}
+
+This dissertation makes four contributions:
+
+\begin{enumerate}
+  \item \textbf{REV2 as a trust-score mechanism for \glsfmtshort{mcp} servers.} It maps clients and servers onto REV2’s rater and product scores, and it analyses what windowing a coupled graph score involves: the scores require windowing the whole graph by time, and fixed Laplace priors bias the scores of sparse windows (Section 3.5).
+  \item \textbf{A windowed mechanism that reacts only to drops}, together with a decision rule based on the delta between historical and recent goodness.
+  \item \textbf{A simulation design} grounded in the literature on evaluating trust systems under attack.
+  \item \textbf{An evaluation against whole-history REV2} that accounts for false alarms, with a documented threshold calibration and a test of how the threshold transfers across scenarios.
+\end{enumerate}
+
+% =============================================================================
+\section{Structure of the dissertation}\label{sec:structure}
+
+\Cref{ch:background} introduces the background the rest of the dissertation relies on: the architecture of \gls{mcp} and the trust relationships within it, trust and reputation systems, REV2 and the configuration used here, and concept drift and change detection. \Cref{ch:literature-review} reviews the literature on malicious \gls{mcp} servers, attacks that exploit reputation history, graph-based rating-fraud detection and approaches to behaviour change in trust assessment. It then works through the design questions that windowing REV2 raises (how the windows relate, how the delta is computed and thresholded, and when the recent score should be reported) and ends by stating the research gap and the design decisions carried forward. \Cref{ch:methodology} describes the methodology.
+% TODO: add later chapters once their structure is decided (user decision 2026-09-28: describe Chs 1–4 only for now).
+Acronyms and terms are defined in the glossary in \cref{app:glossary}.
