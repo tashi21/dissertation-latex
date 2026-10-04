@@ -9,8 +9,8 @@
 The chapters start empty, so References and Appendix A stay empty until something is cited or used. To check the setup on the first compile, paste this into Chapter 1 temporarily:
 
 ```latex
-The \gls{mcp} lets \glspl{llm} call tools; a \gls{rug-pull} \cite{kumar2018rev2}
-is hard to spot \cite[p.~335]{kumar2018rev2}. Again: \gls{mcp}, \gls{def-mcp}.
+The \gls{mcp} lets \glspl{llm} call tools; a \gls{rug-pull} \cite{Kumar2018}
+is hard to spot \cite[p.~335]{Kumar2018}. Again: \gls{mcp}, \gls{def-mcp}.
 ```
 
 Expected: "Model Context Protocol (MCP)" on first use and "MCP" after; [1] and [1, p. 335] linking to References; Appendix A.1 lists LLM and MCP, with MCP ending "(see definition)" and linking to A.2, which lists the MCP definition and "rug pull".
@@ -30,11 +30,11 @@ Expected: "Model Context Protocol (MCP)" on first use and "MCP" after; [1] and [
 
 ## Citing (IEEE)
 
-Entries go in `references.bib`. Keys are first-author surname + year + first title word, e.g. `kumar2018rev2`, `hou2026model`, `page1954continuous`; the file is sorted by key. Only cited entries are printed.
+Entries go in `references.bib`. Keys are first-author surname + year, e.g. `Kumar2018`, `Hou2026`; the file is sorted by key. Only cited entries are printed.
 
 | Write | Get |
 | --- | --- |
-| `\cite{kumar2018rev2}` | [1] |
+| `\cite{Kumar2018}` | [1] |
 | `\cite[p.~3]{key}` or `\cite[3]{key}` | [2, p. 3] |
 | `\cite[Sec.~4.2]{key}` | [2, Sec. 4.2] |
 | `\cite{a,d,f}` | [1], [4], [6] |
