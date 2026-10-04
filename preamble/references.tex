@@ -37,9 +37,10 @@
 \addbibresource{references.bib}  % the database file (name includes .bib)
 
 % --- Adjustments to the IEEE style ------------------------------------------------------
-% Print a URL only for sources that have no DOI (IEEE gives one or the other). The URL stays in references.bib; this just stops it printing next to a DOI.
+% Print a URL only for sources that have neither a DOI nor an arXiv ID (IEEE gives one identifier, not several). The URL stays in references.bib; this just stops it printing next to a DOI or an arXiv number.
 \AtEveryBibitem{%
   \iffieldundef{doi}{}{\clearfield{url}\clearfield{urldate}}%
+  \iffieldundef{eprint}{}{\clearfield{url}\clearfield{urldate}}%
 }
 
 % biblatex-ieee puts quotation marks round the title of online sources and reports, but not of @misc (used for arXiv preprints). This does the same for @misc.

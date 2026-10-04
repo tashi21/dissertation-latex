@@ -93,9 +93,9 @@ The dissertation pursues seven objectives:
 % =============================================================================
 \section{Scope and assumptions}\label{sec:scope}
 
-REV2 is mapped onto \gls{mcp} as follows. Clients, or the agents acting for them, take the role of REV2’s users. \gls{mcp} servers take the role of products, and a server’s trust score is its goodness $G(p)$. REV2 is used with Laplace smoothing and fixed priors, and without its behavioural component. Windows are defined by time and cover the whole rating graph, so all three scores in a window are computed from that window’s ratings alone. Section 2.3 gives the configuration, Section 3.3 the reasons for it, and Section 3.5 the reasons for windowing the whole graph.
+REV2 is mapped onto \gls{mcp} as follows. Clients, or the agents acting for them, take the role of REV2’s users. \gls{mcp} servers take the role of products, and a server’s trust score is its goodness $G(p)$. REV2 is used with Laplace smoothing and fixed priors, and without its behavioural component. Windows are defined by time and cover the whole rating graph, so all three scores in a window are computed from that window’s ratings alone. Section~2.3 gives the configuration, Section~3.3 the reasons for it, and Section~3.5 the reasons for windowing the whole graph.
 
-The primary threat is a one-way shift: a server that behaves benignly and then turns malicious, as in the rug pull described in \cref{sec:untrusted-server}. Two related patterns, cyclic on–off behaviour and gradual poisoning, are treated as stress conditions rather than primary targets (Section 3.2).
+The primary threat is a one-way shift: a server that behaves benignly and then turns malicious, as in the rug pull described in \cref{sec:untrusted-server}. Two related patterns, cyclic on–off behaviour and gradual poisoning, are treated as stress conditions rather than primary targets (Section~3.2).
 
 The evaluation uses simulated rating scenarios. Simulation fixes the moment a server turns malicious, and detection delay cannot be measured without knowing that moment. As Gama et al. note, \enquote{Drifts need to be known; synthetic data is suitable for assessing this aspect}~\cite[p.~44:26]{Gama2014}. The cost is ecological validity: the results describe how the mechanism behaves under the simulated rating models, and they may not carry over directly to real rating behaviour.
 
@@ -113,7 +113,7 @@ Three further assumptions bound what the mechanism can do:
 This dissertation makes four contributions:
 
 \begin{enumerate}
-  \item \textbf{REV2 as a trust-score mechanism for \glsfmtshort{mcp} servers.} It maps clients and servers onto REV2’s rater and product scores, and it analyses what windowing a coupled graph score involves: the scores require windowing the whole graph by time, and fixed Laplace priors bias the scores of sparse windows (Section 3.5).
+  \item \textbf{REV2 as a trust-score mechanism for \glsfmtshort{mcp} servers.} It maps clients and servers onto REV2’s rater and product scores, and it analyses what windowing a coupled graph score involves: the scores require windowing the whole graph by time, and fixed Laplace priors bias the scores of sparse windows (Section~3.5).
   \item \textbf{A windowed mechanism that reacts only to drops}, together with a decision rule based on the delta between historical and recent goodness.
   \item \textbf{A simulation design} grounded in the literature on evaluating trust systems under attack.
   \item \textbf{An evaluation against whole-history REV2} that accounts for false alarms, with a documented threshold calibration and a test of how the threshold transfers across scenarios.
