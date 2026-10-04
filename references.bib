@@ -15,7 +15,7 @@
    journal = {IEEE Transactions on Software Engineering},
    month = {8},
    pages = {2410-2426},
-   title = {Beyond the Protocol: Unveiling Attack Vectors in the Model Context Protocol (MCP) Ecosystem},
+   title = {Beyond the Protocol: Unveiling Attack Vectors in the {Model Context Protocol (MCP)} Ecosystem},
    volume = {52},
    url = {https://ieeexplore.ieee.org/document/11528180/},
    year = {2026}
@@ -56,7 +56,7 @@
    journal = {IEEE Transactions on Knowledge and Data Engineering},
    month = {7},
    pages = {843-857},
-   title = {PeerTrust: Supporting Reputation-Based Trust for Peer-to-Peer Electronic Communities},
+   title = {{PeerTrust}: Supporting Reputation-Based Trust for Peer-to-Peer Electronic Communities},
    volume = {16},
    url = {http://ieeexplore.ieee.org/document/1318566/},
    year = {2004}
@@ -94,7 +94,7 @@
    booktitle = {Findings of the Association for Computational Linguistics ACL 2024},
    pages = {10471-10506},
    publisher = {Association for Computational Linguistics},
-   title = {InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents},
+   title = {{InjecAgent}: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents},
    url = {https://aclanthology.org/2024.findings-acl.624},
    year = {2024}
 }
@@ -120,7 +120,7 @@
    month = {2},
    pages = {333-341},
    publisher = {ACM},
-   title = {REV2: Fraudulent User Prediction in Rating Platforms},
+   title = {{REV2}: Fraudulent User Prediction in Rating Platforms},
    url = {https://dl.acm.org/doi/10.1145/3159652.3159729},
    year = {2018}
 }
@@ -142,7 +142,7 @@
    abstract = {Recent advances in Language Model (LM) agents and tool use, exemplified by applications like ChatGPT Plugins, enable a rich set of capabilities but also amplify potential risks - such as leaking private data or causing financial losses. Identifying these risks is labor-intensive, necessitating implementing the tools, setting up the environment for each test scenario manually, and finding risky cases. As tools and agents become more complex, the high cost of testing these agents will make it increasingly difficult to find high-stakes, long-tailed risks. To address these challenges, we introduce ToolEmu: a framework that uses an LM to emulate tool execution and enables the testing of LM agents against a diverse range of tools and scenarios, without manual instantiation. Alongside the emulator, we develop an LM-based automatic safety evaluator that examines agent failures and quantifies associated risks. We test both the tool emulator and evaluator through human evaluation and find that 68.8\% of failures identified with ToolEmu would be valid real-world agent failures. Using our curated initial benchmark consisting of 36 high-stakes tools and 144 test cases, we provide a quantitative risk analysis of current LM agents and identify numerous failures with potentially severe outcomes. Notably, even the safest LM agent exhibits such failures 23.9\% of the time according to our evaluator, underscoring the need to develop safer LM agents for real-world deployment.},
    author = {Yangjun Ruan and Honghua Dong and Andrew Wang and Silviu Pitis and Yongchao Zhou and Jimmy Ba and Yann Dubois and Chris J. Maddison and Tatsunori Hashimoto},
    month = {5},
-   title = {Identifying the Risks of LM Agents with an LM-Emulated Sandbox},
+   title = {Identifying the Risks of {LM} Agents with an {LM}-Emulated Sandbox},
    url = {http://arxiv.org/abs/2309.15817},
    year = {2024}
 }
@@ -176,7 +176,7 @@
    abstract = {Agentification serves as a critical enabler of Edge General Intelligence (EGI), transforming massive edge devices into cognitive agents through integrating Large Language Models (LLMs) and perception, reasoning, and acting modules. These agents collaborate across heterogeneous edge infrastructures, forming multi-LLM agentic AI systems that leverage collective intelligence and specialized capabilities to tackle complex, multi-step tasks. However, the collaborative nature of multi-LLM systems introduces critical security vulnerabilities, including insecure inter-LLM communications, expanded attack surfaces, and cross-domain data leakage that traditional perimeter-based security cannot adequately address. To this end, this survey introduces zero-trust security of multi-LLM in EGI, a paradigmatic shift following the ``never trust, always verify'' principle. We begin by systematically analyzing the security risks in multi-LLM systems within EGI contexts. Subsequently, we present the vision of a zero-trust multi-LLM framework in EGI. We then survey key technical progress to facilitate zero-trust multi-LLM systems in EGI. Particularly, we categorize zero-trust security mechanisms into model- and system-level approaches. The former and latter include strong identification, context-aware access control, etc., and proactive maintenance, blockchain-based management, etc., respectively. Finally, we identify critical research directions. This survey serves as the first systematic treatment of zero-trust applied to multi-LLM systems, providing both theoretical foundations and practical strategies.},
    author = {Yinqiu Liu and Ruichen Zhang and Haoxiang Luo and Yijing Lin and Geng Sun and Dusit Niyato and Hongyang Du and Zehui Xiong and Yonggang Wen and Abbas Jamalipour and Dong In Kim and Ping Zhang},
    month = {8},
-   title = {Secure Multi-LLM Agentic AI and Agentification for Edge General Intelligence by Zero-Trust: A Survey},
+   title = {Secure Multi-{LLM} Agentic {AI} and Agentification for Edge General Intelligence by Zero-Trust: A Survey},
    url = {http://arxiv.org/abs/2508.19870},
    year = {2025}
 }
@@ -203,7 +203,7 @@
    journal = {Sensors},
    month = {12},
    pages = {7513},
-   title = {Trust Attacks and Defense in the Social Internet of Things: Taxonomy and Simulation-Based Evaluation},
+   title = {Trust Attacks and Defense in the {Social Internet of Things}: Taxonomy and Simulation-Based Evaluation},
    volume = {25},
    url = {https://www.mdpi.com/1424-8220/25/24/7513},
    year = {2025}
@@ -212,7 +212,7 @@
    abstract = {Dynamic trust evaluation in large, rapidly evolving graphs demands models that capture changing relationships, express calibrated confidence, and resist adversarial manipulation. DGTEN (Deep Gaussian-Based Trust Evaluation Network) introduces a unified graph-based framework that does all three by combining uncertainty-aware message passing, expressive temporal modeling, and built-in defenses against trust-targeted attacks. It represents nodes and edges as Gaussian distributions so that both semantic signals and epistemic uncertainty propagate through the graph neural network, enabling risk-aware trust decisions rather than overconfident guesses. To track how trust evolves, it layers hybrid absolute-Gaussian-hourglass positional encoding with Kolmogorov-Arnold network-based unbiased multi-head attention, then applies an ordinary differential equation-based residual learning module to jointly model abrupt shifts and smooth trends. Robust adaptive ensemble coefficient analysis prunes or down-weights suspicious interactions using complementary cosine and Jaccard similarity, curbing reputation laundering, sabotage, and on-off attacks. On two signed Bitcoin trust networks, DGTEN delivers standout gains where it matters most: in single-timeslot prediction on Bitcoin-OTC, it improves MCC by +12.34\% over the best dynamic baseline; in the cold-start scenario on Bitcoin-Alpha, it achieves a +25.00\% MCC improvement, the largest across all tasks and datasets; while under adversarial on-off attacks, it surpasses the baseline by up to +10.23\% MCC. These results endorse the unified DGTEN framework.},
    author = {Muhammad Usman and Yugyung Lee},
    month = {12},
-   title = {DGTEN: A Robust Deep Gaussian based Graph Neural Network for Dynamic Trust Evaluation with Uncertainty-Quantification Support},
+   title = {{DGTEN}: A Robust Deep {Gaussian} based Graph Neural Network for Dynamic Trust Evaluation with Uncertainty-Quantification Support},
    url = {http://arxiv.org/abs/2510.07620},
    year = {2025}
 }
@@ -225,7 +225,7 @@
    month = {10},
    pages = {177-182},
    publisher = {ACM},
-   title = {MSA: A Cross-MCP Privacy Attack via Memory Exfiltration of Large Language Models},
+   title = {{MSA}: A Cross-{MCP} Privacy Attack via Memory Exfiltration of Large Language Models},
    url = {https://dl.acm.org/doi/10.1145/3733802.3764057},
    year = {2025}
 }
@@ -238,7 +238,7 @@
    journal = {ACM Transactions on Software Engineering and Methodology},
    month = {10},
    pages = {1-37},
-   title = {Model Context Protocol (MCP): Landscape, Security Threats, and Future Research Directions},
+   title = {{Model Context Protocol (MCP)}: Landscape, Security Threats, and Future Research Directions},
    volume = {35},
    url = {https://dl.acm.org/doi/10.1145/3796519},
    year = {2026}
@@ -252,7 +252,7 @@
    month = {11},
    pages = {79-90},
    publisher = {ACM},
-   title = {Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection},
+   title = {Not What You've Signed Up For: Compromising Real-World {LLM}-Integrated Applications with Indirect Prompt Injection},
    url = {https://dl.acm.org/doi/10.1145/3605764.3623985},
    year = {2023}
 }
@@ -260,13 +260,13 @@
    abstract = {The model context protocol (MCP) standardizes how LLMs connect to external tools and data sources, enabling faster integration but introducing new attack vectors. Despite the growing adoption of MCP, existing MCP security studies classify attacks by their observable effects, obscuring how attacks behave across different MCP server components and overlooking multi-component attack chains. Meanwhile, existing defenses are less effective when facing multi-component attacks or previously unknown malicious behaviors. This work presents a component-centric perspective for understanding and detecting malicious MCP servers. First, we build the first component-centric PoC dataset of 114 malicious MCP servers where attacks are achieved as manipulation over MCP components and their compositions. We evaluate these attacks' effectiveness across two MCP hosts and five LLMs, and uncover that (1) component position shapes attack success rate; and (2) multi-component compositions often outperform single-component attacks by distributing malicious logic. Second, we propose and implement Connor, a two-stage behavioral deviation detector for malicious MCP servers. It first performs pre-execution analysis to detect malicious shell commands and extract each tool's function intent, and then conducts step-wise in-execution analysis to trace each tool's behavioral trajectories and detect deviations from its function intent. Evaluation on our curated dataset indicates that Connor achieves an F1-score of 94.6\%, outperforming the state of the art by 8.9\% to 59.6\%. In real-world detection, Connor identifies two malicious servers.},
    author = {Yiheng Huang and Zhijia Zhao and Bihuan Chen and Susheng Wu and Zhuotong Zhou and Yiheng Cao and Xin Hu and Xin Peng},
    month = {5},
-   title = {From Component Manipulation to System Compromise: Understanding and Detecting Malicious MCP Servers},
+   title = {From Component Manipulation to System Compromise: Understanding and Detecting Malicious {MCP} Servers},
    url = {http://arxiv.org/abs/2604.01905},
    year = {2026}
 }
 @misc{NSA2026,
    author = {{National Security Agency}},
-   title = {Model Context Protocol (MCP): Security Design Considerations for {AI}-Driven Automation},
+   title = {{Model Context Protocol (MCP)}: Security Design Considerations for {AI}-Driven Automation},
    howpublished = {Cybersecurity Information Sheet U/OO/6030316-26, PP-26-1834, Ver. 1.0},
    month = {5},
    url = {https://www.nsa.gov/Portals/75/documents/Cybersecurity/CSI_MCP_SECURITY.pdf},

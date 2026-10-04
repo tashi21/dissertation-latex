@@ -28,6 +28,10 @@
                             % the top of a page ("widow")
 \clubpenalty=10000          % never leave the first line of a paragraph alone at
                             % the bottom of a page ("orphan")
+\setlength{\emergencystretch}{2em}  % if a line can't be broken well, let TeX stretch
+                            % the spaces in the whole paragraph a little more
+                            % rather than let a line run into the margin
+                            % ("Overfull \hbox" warnings, mostly in long references)
 
 % --- Headers and footers -------------------------------------------------------------------
 % fancyhdr defines "page styles": what goes in the header and footer.
