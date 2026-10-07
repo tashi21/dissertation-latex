@@ -1,14 +1,16 @@
-% =============================================================================
+% ==================================================================================================
 % frontmatter/abstract.tex
 % Unnumbered chapter with a PDF bookmark but no table-of-contents entry
-% (see acknowledgements.tex for what each command does).
-% =============================================================================
+% \chapter* = unnumbered chapter: new page, big title, no number and no table-of-contents entry.
+% \pdfbookmark[level]{text}{id} still adds it to the PDF viewer's bookmarks panel; level 0 = same
+% level as chapters, id = any unique name.
+% ==================================================================================================
 
 \chapter*{Abstract}
 \pdfbookmark[0]{Abstract}{abstract}
 
 [Abstract to be written.]
 
-% Optional keywords line: remove the % signs to use it.
-% \medskip                                  % small vertical gap
-% \noindent\textbf{Keywords:} ...           % \noindent: no paragraph indent
+% Optional keywords line:
+% \medskip                          % small vertical gap
+% \noindent\textbf{Keywords:} ...   % \noindent: no paragraph indent

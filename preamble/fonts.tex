@@ -1,23 +1,22 @@
-% =============================================================================
-% preamble/fonts.tex: document fonts. Compile with XeLaTeX (Overleaf: Menu -> Compiler -> XeLaTeX).
+% ==================================================================================================
+% preamble/fonts.tex: document fonts. Compile with XeLaTeX.
 %
-% Aptos is loaded from the font files in assets/font-aptos/ (Overleaf doesn't have Aptos installed, so it can't be loaded by name).
+% Aptos is loaded from the font files in assets/font-aptos/
 % Path: folder holding the files, relative to main.tex. Extension: added to each file name.
-% "*" stands for the base name "Aptos": UprightFont = * -> Aptos.ttf, BoldFont = *-Bold -> Aptos-Bold.ttf, and so on.
-% \setmainfont sets the body font; \setsansfont sets the sans-serif font to the same, so nothing switches to a different font by accident.
 % Maths stays in the default Latin Modern maths font.
-% =============================================================================
+% ==================================================================================================
 
 \usepackage{fontspec}
-
+% Sets the body font
 \setmainfont{Aptos}[
   Path           = assets/font-aptos/,
   Extension      = .ttf,
-  UprightFont    = *,
+  UprightFont    = *,   % "*" stands for the base name "Aptos"
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-Bold-Italic,
 ]
+% Sets the sans-serif font to the same as the body font
 \setsansfont{Aptos}[
   Path           = assets/font-aptos/,
   Extension      = .ttf,

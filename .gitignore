@@ -94,3 +94,6 @@ Temporary Items
 
 # iCloud generated files
 *.icloud
+
+# Local build output (see Makefile)
+build/

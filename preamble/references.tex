@@ -1,47 +1,45 @@
-% =============================================================================
+% ==================================================================================================
 % preamble/references.tex: IEEE citations and reference list.
 %
 % HOW IT WORKS
-% biblatex formats citations and the reference list; biber is the helper
-% program that reads references.bib and sorts/numbers the entries (Overleaf
-% runs it automatically). biblatex-ieee supplies the IEEE style.
+% biblatex formats citations and the reference list; biber is the helper program that reads
+% references.bib and sorts/numbers the entries. biblatex-ieee supplies the IEEE style.
 % The reference list is printed by backmatter/references.tex.
 %
 % CITING IN THE TEXT
-% citestyle = ieee-comp puts each number in its own brackets and collapses
-% runs of consecutive numbers into a range:
-%   \cite{a}                       [1]
-%   \cite[p.~3]{b}                 [2, p. 3]      (\cite[3]{b} adds the "p." itself)
-%   \cite[pp.~3--5]{b}             [2, pp. 3-5]
-%   \cite[Sec.~4.2]{b}             [2, Sec. 4.2]
-%   \cite{a,d,f}                   [1], [4], [6]
-%   \cite{a,b,c,d}                 [1]-[4]        (consecutive numbers)
-%   \cites[p.~3]{a}[Sec.~2]{b}     [1, p. 3], [2, Sec. 2]  (a note per source)
-%   \textcite{b}                   Kumar et al. [2]  (author as sentence subject)
+% citestyle = ieee-comp puts each number in its own brackets and collapses runs of consecutive
+% numbers into a range:
+%   \cite{a}                    [1]
+%   \cite[p.~3]{b}              [2, p. 3]               (\cite[3]{b} adds the "p." itself)
+%   \cite[pp.~3--5]{b}          [2, pp. 3-5]
+%   \cite[Sec.~4.2]{b}          [2, Sec. 4.2]
+%   \cite{a,d,f}                [1], [4], [6]
+%   \cite{a,b,c,d}              [1]-[4]                 (consecutive numbers)
+%   \cites[p.~3]{a}[Sec.~2]{b}  [1, p. 3], [2, Sec. 2]  (a note per source)
+%   \textcite{b}                Kumar et al. [2]        (author as sentence subject)
 % "~" is a non-breaking space so "p." and "3" stay on one line.
 % Every number is a link to its entry in the reference list (via hyperref).
 % Numbers follow the order in which sources are first cited, as IEEE requires.
-% (The plain "ieee" citestyle would print [1], [2], [3], [4] with no range.)
-% =============================================================================
+% ==================================================================================================
 
 \usepackage[
-  backend   = biber,      % biber (not the older bibtex) processes references.bib
-  style     = ieee,       % IEEE reference-list format (initials, "vol.", "pp.",
-                          % "doi:"); entries listed in citation order
-  citestyle = ieee-comp,  % in-text [n] with ranges, as described above
-  doi       = true,       % print DOIs in the reference list
-  url       = true,       % print URLs (for sources without a DOI)
-  isbn      = false,      % don't print ISBNs (IEEE references normally omit them)
+    backend   = biber,      % biber processes references.bib
+    style     = ieee,       % IEEE reference-list format (initials, "vol.", "pp.", "doi:")
+    citestyle = ieee-comp,  % in-text [n] with ranges
+    doi       = true,       % print DOIs in the reference list
+    url       = true,       % print URLs (for sources without a DOI)
+    isbn      = false,      % don't print ISBNs (IEEE references normally omit them)
 ]{biblatex}
 
 \addbibresource{references.bib}  % the database file (name includes .bib)
 
-% --- Adjustments to the IEEE style ------------------------------------------------------
-% Print a URL only for sources that have neither a DOI nor an arXiv ID (IEEE gives one identifier, not several). The URL stays in references.bib; this just stops it printing next to a DOI or an arXiv number.
+% ========================================== adjustments ===========================================
+% Print a URL only for sources that have neither a DOI nor an arXiv ID.
 \AtEveryBibitem{%
-  \iffieldundef{doi}{}{\clearfield{url}\clearfield{urldate}}%
-  \iffieldundef{eprint}{}{\clearfield{url}\clearfield{urldate}}%
+    \iffieldundef{doi}{}{\clearfield{url}\clearfield{urldate}}%
+    \iffieldundef{eprint}{}{\clearfield{url}\clearfield{urldate}}%
 }
 
-% biblatex-ieee puts quotation marks round the title of online sources and reports, but not of @misc (used for arXiv preprints). This does the same for @misc.
+% biblatex-ieee puts quotation marks round the title of online sources and reports, but not of
+% @misc (used for arXiv preprints). This does the same for @misc.
 \DeclareFieldFormat[misc]{title}{\mkbibquote{#1\isdot}}

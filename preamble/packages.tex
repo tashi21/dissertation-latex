@@ -1,42 +1,36 @@
-% =============================================================================
+% ==================================================================================================
 % preamble/packages.tex: general-purpose packages used across the document.
 %
 % \usepackage[options]{name} loads a package (a library of commands).
-% Load order occasionally matters; where it does, a comment says why.
+% Load order occasionally matters
 % Topic-specific packages live in the other preamble files:
-%   fonts.tex (fonts), layout.tex (geometry, setspace, fancyhdr, titlesec),
-%   floats.tex (caption, booktabs, algorithm), references.tex (biblatex),
-%   links.tex (hyperref, cleveref), glossary.tex (glossaries-extra).
+% - fonts.tex (fonts), layout.tex (geometry, setspace, fancyhdr, titlesec),
+% - floats.tex (caption, booktabs, algorithm), references.tex (biblatex),
+% - links.tex (hyperref, cleveref), glossary.tex (glossaries-extra).
 % The document is compiled with XeLaTeX (needed by fontspec in fonts.tex).
-% =============================================================================
+% ==================================================================================================
 
-% --- Language and quotation marks ---------------------------------------------------
-\usepackage[british]{babel}  % British English: hyphenation patterns, and the
-                             % names "Contents", "Chapter", "Appendix", dates
-\usepackage{csquotes}        % language-aware quotation marks; biblatex needs it.
-                             % \enquote{text} gives 'text' in British style.
-\usepackage{etoolbox}        % programming helpers; \appto is used in layout.tex
+% ================================= language and quotation marks ===================================
+\usepackage[british]{babel} % British English: hyphenation patterns, and the names "Contents",
+                            % "Chapter", "Appendix", dates
+\usepackage{csquotes}       % language-aware quotation marks; biblatex needs it. \enquote{text}
+                            % gives 'text' in British style.
+\usepackage{etoolbox}       % programming helpers; \appto is used in layout.tex
 
-% --- Maths -------------------------------------------------------------------------
-\usepackage{amsmath}      % equation environments (align, gather, cases, ...)
-\usepackage{amssymb}      % extra symbols (\mathbb, \leqslant, ...)
-\usepackage{mathtools}    % fixes and extensions to amsmath (\coloneqq, ...)
+% ============================================ maths ===============================================
+\usepackage{amsmath}    % equation environments (align, gather, cases, ...)
+\usepackage{amssymb}    % extra symbols (\mathbb, \leqslant, ...)
+\usepackage{mathtools}  % fixes and extensions to amsmath (\coloneqq, ...)
 
-% --- Graphics and colour -----------------------------------------------------------
-\usepackage{graphicx}                 % \includegraphics for images
-\graphicspath{{figures/}{assets/}}    % folders searched for images, so you can
-                                      % write \includegraphics{name} with no path
-                                      % and no file extension
-\usepackage[dvipsnames]{xcolor}       % colours; dvipsnames adds ~70 named colours
-                                      % (NavyBlue, ForestGreen, ...)
-\definecolor{linkblue}{RGB}{0,51,153} % dark blue used for links (see config.tex)
-\usepackage{tikz}                     % drawing package; the cover uses it to place
-                                      % the logos at exact positions on the page
+% ====================================== graphics and colour =======================================
+\usepackage{graphicx}                   % \includegraphics for images
+\graphicspath{{figures/}{assets/}}      % folders searched for images
+\usepackage[dvipsnames]{xcolor}         % colours; dvipsnames adds ~70 named colours
+\definecolor{linkblue}{RGB}{0,51,153}   % dark blue used for links (see config.tex)
+\usepackage{tikz}                       % drawing package; the cover uses it to place the logos at
+                                        % exact positions on the page
 
-% --- Typography ------------------------------------------------------------------------
-\usepackage{microtype}    % small spacing adjustments for more even text and
-                          % fewer bad line breaks: character protrusion (margin
-                          % kerning)
-\usepackage{xurl}         % lets long URLs (e.g. in references) break at any
-                          % character instead of running into the margin; must
-                          % load before hyperref
+% ========================================== typography ============================================
+\usepackage{microtype}  % small spacing adjustments for more even text and fewer bad line breaks
+\usepackage{xurl}       % lets long URLs (e.g. in references) break at any character; must load
+                        % before hyperref

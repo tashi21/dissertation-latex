@@ -1,45 +1,45 @@
-% =============================================================================
+% ==================================================================================================
 % preamble/links.tex: clickable links and named cross-references.
 %
-% hyperref makes every citation, cross-reference, table-of-contents entry,
-% glossary term and URL clickable, and builds the PDF bookmarks panel. It
-% changes many other packages' commands, so it loads after almost everything;
-% only cleveref (right below) and glossaries-extra (glossary.tex) come later.
-% =============================================================================
+% hyperref makes every citation, cross-reference, table-of-contents entry, glossary term and URL
+% clickable, and builds the PDF bookmarks panel. It changes many other packages' commands, so it
+% loads after almost everything; only cleveref (right below) and glossaries-extra (glossary.tex)
+% come later.
+% ==================================================================================================
 
-% --- hyperref ----------------------------------------------------------------------
+% =========================================== hyperref =============================================
 \usepackage[
-  colorlinks,          % colour link text instead of drawing boxes around it
-  bookmarksnumbered,   % PDF bookmarks show chapter/section numbers
+    colorlinks,         % colour link text instead of drawing boxes around it
+    bookmarksnumbered,  % PDF bookmarks show chapter/section numbers
 ]{hyperref}
 
 \hypersetup{
-  linkcolor  = black,              % internal links (ToC, \cref, glossary): body colour
-  citecolor  = black,              % citation numbers [1]: body colour
-  urlcolor   = \thesislinkcolour,  % URLs and DOIs (\url, \href, reference list): blue
-  pdftitle   = {\thesistitle},     % PDF metadata, shown in the viewer's title bar
-  pdfauthor  = {\thesisauthor},    % and in File -> Properties
-  pdfsubject = {\thesisdegree{} dissertation},
+    linkcolor  = black,             % internal links (ToC, \cref, glossary): body colour
+    citecolor  = black,             % citation numbers [1]: body colour
+    urlcolor   = \thesislinkcolour, % URLs and DOIs (\url, \href, reference list): blue
+    pdftitle   = {\thesistitle},    % PDF metadata, shown in the viewer's title bar
+    pdfauthor  = {\thesisauthor},   % and in File -> Properties
+    pdfsubject = {\thesisdegree{} dissertation},
 }
 
-% --- cleveref ------------------------------------------------------------------------
-% Writes the reference type for you, so numbers and names can't get out of
-% step. Label something, then refer to it:
-%   \label{fig:pipeline}  ->  \cref{fig:pipeline}   "Figure 3.1"
-%                             \Cref{fig:pipeline}   same, for sentence starts
-%   \cref{fig:a,fig:b}        "Figures 3.1 and 3.2"
-%   \cref{eq:rev2}            "Equation (2.1)"
+% =========================================== cleveref =============================================
+% Writes the reference type for you, so numbers and names can't get out of step. Label something,
+% then refer to it:
+%   \label{fig:pipeline} -> \cref{fig:pipeline}   "Figure 3.1"
+%                           \Cref{fig:pipeline}   same, for sentence starts
+%   \cref{fig:a,fig:b}      "Figures 3.1 and 3.2"
+%   \cref{eq:rev2}          "Equation (2.1)"
 % Label prefixes used in this template, so labels stay readable:
-%   ch: chapter   sec: section   fig: figure   tab: table
-%   alg: algorithm   eq: equation   app: appendix
+%   ch  : chapter       sec : section       fig : figure        tab : table
+%   alg : algorithm     eq  : equation      app : appendix
 % Plain \ref{label} still works and prints just the number ("3.1").
 \usepackage[
-  capitalise,   % "Figure 3.1" rather than "figure 3.1" mid-sentence
-  noabbrev,     % "Figure", "Equation" rather than "Fig.", "Eq."
+    capitalise,   % "Figure 3.1" rather than "figure 3.1" mid-sentence
+    noabbrev,     % "Figure", "Equation" rather than "Fig.", "Eq."
 ]{cleveref}
 
 % Names cleveref prints for types it doesn't name the way we want:
-% \crefname{type}{singular}{plural}
-\crefname{algorithm}{Algorithm}{Algorithms}  % algorithm floats
-\crefname{ALG@line}{line}{lines}             % labelled lines inside algorithmic
-\crefname{appendix}{Appendix}{Appendices}    % chapters after \appendix
+%   \crefname{type}{singular}{plural}
+\crefname{algorithm}{Algorithm}{Algorithms} % algorithm floats
+\crefname{ALG@line}{line}{lines}            % labelled lines inside algorithmic
+\crefname{appendix}{Appendix}{Appendices}   % chapters after \appendix

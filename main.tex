@@ -1,6 +1,8 @@
-% =============================================================================
-% main.tex: the root file. This is the file you compile. This file only decides the ORDER of things. All settings live elsewhere:
-% config.tex: your details (title, name, supervisor, ...) and a few layout values (margins, line spacing, link colour)
+% ==================================================================================================
+% main.tex: the root file. This is the file you compile. This file only decides the ORDER of
+%   things. All settings live elsewhere:
+% config.tex: your details (title, name, supervisor, ...) and a few layout values (margins, line
+%   spacing, link colour)
 % preamble/*.tex: package setup, one topic per file
 % frontmatter/*.tex: cover, acknowledgements, abstract, contents/lists
 % chapters/*.tex: one file per chapter
@@ -8,19 +10,20 @@
 % glossary/entries.tex: abbreviations and glossary terms
 % references.bib: bibliography database
 %
-% \input{file}: pastes file.tex in at that point (use for small pieces and anything in the preamble).
-% \include{file}: does the same but always starts a new page, and lets you compile only some chapters with \includeonly (see below). Use it for chapters and appendices only; it cannot be nested.
-% =============================================================================
-% Document class:
-% book: provides \frontmatter, \mainmatter and \appendix, which give the roman-then-arabic page numbering and chapter handling.
+% \input{file}: pastes file.tex in at that point (use for small pieces and preamble/*).
+% \include{file}: does the same but always starts a new page. Use it for chapters and appendices
+%   only. It cannot be nested.
+% ==================================================================================================
+
 % 12pt: body text size
-% a4paper: UK paper size
+% a4paper: paper size
 % oneside: single-sided PDF, identical left/right margins, no blank pages
 % openany: chapters start on the next page
+% book: provides \frontmatter, \mainmatter and \appendix, which give the roman-then-arabic page
+% numbering and chapter handling.
 \documentclass[12pt,a4paper,oneside,openany]{book}
 
-% ------------------------------------------------------------------ preamble
-% Order: config first (defines macros the others use), links near the end (hyperref must load after most packages), glossary last (glossaries-extra must load after hyperref).
+% =========================================== preamble =============================================
 \input{config}               % details and layout values
 \input{preamble/packages}    % general packages (language, maths, graphics)
 \input{preamble/fonts}       % fonts
@@ -30,37 +33,35 @@
 \input{preamble/links}       % hyperref and cleveref; keep after the files above
 \input{preamble/glossary}    % glossaries-extra must load after hyperref
 
-% Uncomment to compile only some chapters (faster while drafting); page and
-% reference numbers from the other chapters are kept from the last full run.
-% \includeonly{chapters/ch3-literature-review}
-
 \begin{document}
 
-% ---------------------------------------------------------------- front matter
-% The cover gets letter "page numbers" (A) that are never printed. This keeps its internal page ID different from page i and page 1, so hyperref does not warn about duplicate page destinations.
+% ========================================= front matter ===========================================
+% The cover gets letter page numbers (A) that are never printed. This keeps its internal page ID
+% different from page i and page 1, so hyperref does not warn about duplicate page destinations.
 \pagenumbering{Alph}
 \input{frontmatter/cover}
 
-% \frontmatter: page numbers restart at i, ii, iii, ... and chapters are unnumbered
+% Page numbers restart at i, ii ... and chapters are unnumbered
 \frontmatter
 \input{frontmatter/acknowledgements}
 \input{frontmatter/abstract}
 \input{frontmatter/lists} % table of contents, lists of tables/figures/algorithms
 
-% ----------------------------------------------------------------- main matter
-% \mainmatter: page numbers restart at 1 in arabic numerals, chapters are numbered, and the running header is switched on (see preamble/layout.tex).
+% ========================================= main matter ============================================
+% Page numbers restart at 1 in arabic numerals, chapters are numbered, and the running header is
+% switched on (see preamble/layout.tex).
 \mainmatter
 \include{chapters/ch1-introduction}
 \include{chapters/ch2-background}
 \include{chapters/ch3-literature-review}
 \include{chapters/ch4-methodology}
 
-% ------------------------------------------------------------------ references
+% ========================================== references ============================================
 % Printed after the last chapter and listed in the table of contents.
 \input{backmatter/references}
 
-% ------------------------------------------------------------------ appendices
-% \appendix: chapters from here on are lettered (Appendix A, B, ...) instead of numbered.
+% ========================================== appendices ============================================
+% Chapters from here on are lettered (Appendix A, B, ...) instead of numbered.
 \appendix
 \include{backmatter/appendix-glossary}
 
