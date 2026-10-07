@@ -1,27 +1,21 @@
 % ==================================================================================================
 % preamble/fonts.tex: document fonts. Compile with XeLaTeX.
 %
-% Aptos is loaded from the font files in assets/font-aptos/
-% Path: folder holding the files, relative to main.tex. Extension: added to each file name.
-% Maths stays in the default Latin Modern maths font.
+% Aptos is loaded from the font files in assets/font-aptos/. Maths stays in the default Latin
+% Modern maths font.
 % ==================================================================================================
 
 \usepackage{fontspec}
-% Sets the body font
-\setmainfont{Aptos}[
-  Path           = assets/font-aptos/,
-  Extension      = .ttf,
-  UprightFont    = *,   % "*" stands for the base name "Aptos"
-  BoldFont       = *-Bold,
-  ItalicFont     = *-Italic,
-  BoldItalicFont = *-Bold-Italic,
-]
-% Sets the sans-serif font to the same as the body font
-\setsansfont{Aptos}[
+
+% settings shared by every font loaded below
+\defaultfontfeatures{
   Path           = assets/font-aptos/,
   Extension      = .ttf,
   UprightFont    = *,
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-Bold-Italic,
-]
+}
+
+\setmainfont{Aptos}  % body font
+\setsansfont{Aptos}  % sans-serif font
