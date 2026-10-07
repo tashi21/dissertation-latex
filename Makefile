@@ -10,8 +10,11 @@
 # All generated files (.aux, .log, .bbl, the PDF, ...) go in this folder
 OUT := build
 
+# Always use Biber installed by Homebrew, rather than a TeX distribution's copy.
+HOMEBREW_BIBER := $(shell brew --prefix biber)/bin/biber
+
 # The latexmk command shared by every target
-LATEXMK := latexmk -silent -pdfxe -outdir=$(OUT) -file-line-error -halt-on-error
+LATEXMK := latexmk -silent -pdfxe -outdir=$(OUT) -file-line-error -halt-on-error -e '$$biber = "$(HOMEBREW_BIBER)"'
 
 # Targets that are commands, not files
 .PHONY: all clean
