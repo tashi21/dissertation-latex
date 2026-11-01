@@ -1,18 +1,250 @@
 % ==================================================================================================
 % chapters/ch2-background.tex: Chapter 2.
+%
+% Converted from drafts/ch2-background.md (vault draft, revised 2026-11-01). Conventions as in
+% ch1-introduction.tex: citations with \cite / \textcite, cross-references with \cref, terms and
+% abbreviations through the glossary (glossary/entries.tex).
+% Figures 2.1 to 2.3 are placeholders (a framed box). TODO: draw them and replace each box with
+% \includegraphics.
 % ==================================================================================================
 
 \chapter{Background}\label{ch:background}
 
-% TEMPORARY placeholder content: the minimum needed to clear the unused-table-caption warning. Replace when writing the chapter.
-% table + \caption   uses the table caption setup from preamble/floats.tex
+% ==================================================================================================
+\section{Model Context Protocol: architecture and trust relationships}\label{sec:mcp-architecture}
+
+\Gls{mcp} is structured around three components: a \gls{mcp-host}, a \gls{mcp-client}, and a \gls{mcp-server}~\cite[p.~5]{Hou2026}. The host is the \gls{ai} application in which tasks are carried out, such as Claude Desktop, Codex, or an autonomous agent, and is what runs the \gls{mcp} client~\cite[pp.~5--6]{Hou2026}. Each client keeps a one-to-one connection with a single server, querying the functions that server offers and sending requests to it on behalf of the host~\cite[p.~6]{Hou2026}. The server offers \glspl{mcp-tool}, which carry out operations through external services and \glspl{api}, resources, which expose data from local storage, databases or cloud platforms; and prompts, which are reusable task templates~\cite[p.~6]{Hou2026}.
+
+Communication between client and server follows a fixed sequence. The client first asks the server what it offers, the server replies with a list of its tools, resources and prompts, and the two then exchange notifications that keep the client informed of changes on the server~\cite[p.~7]{Hou2026}. When the host needs an operation performed, it obtains the list of available tools through the client, selects one that fits the task, and sends an invocation request; the server performs the operation and returns the result through the client~\cite[p.~6]{Hou2026}. Because tools are described and invoked through the protocol rather than through an interface specific to one model, a tool written by one developer can be discovered and used by any compliant host~\cite[p.~6]{Hou2026}.
+
+\textcite{Hou2026} divide the life of an \gls{mcp} server into four phases, according to who is acting in each~\cite[p.~7]{Hou2026}. In the creation phase, a developer defines the server's metadata, declares its capabilities and implements it. In the deployment phase, the developer releases the server to a public platform and users install it into a host. The operation phase is the period in which users interact with the server, and the maintenance phase covers version updates, configuration changes and other modifications to the deployed server~\cite[p.~7]{Hou2026}. Most of the \glspl{mcp-market} on which servers are published are run by third parties, although, at the time of the survey, Anthropic had begun to develop an official registry~\cite[p.~8]{Hou2026}. Installation therefore does not end a server's development: updates continue to reach it through maintenance after users have adopted it~\cite[p.~9]{Hou2026}.
+
+Trust enters this architecture at two points (\cref{fig:mcp-trust}). At deployment, users choose servers from these markets mainly by their names and descriptions~\cite[p.~15]{Hou2026}. At operation, the choice of tool is usually left to the \gls{ai} application, which relies on textual tool names and descriptions without cryptographic verification~\cite[p.~17]{Hou2026}, and the model treats the metadata of a tool as authoritative~\cite[p.~18]{Hou2026}. \textcite{Song2026} place the core trust boundary of an \gls{mcp} system between the client and the server, and treat all information that comes from a potentially malicious server as untrusted~\cite[p.~2412]{Song2026}. The protocol requires a server to register its capabilities and send its tool descriptions to the client at installation, but it does not prohibit later changes to them~\cite[p.~2414]{Song2026}. As \cref{sec:untrusted-server} argues, both decisions are therefore made at a particular moment, while the server they concern can change afterwards.
+
+\begin{figure}[tb]
+  \centering
+  % TODO: draw Figure 2.1 and replace the box below with \includegraphics.
+  \fbox{\parbox[c][6cm][c]{0.85\linewidth}{\centering\itshape Figure to be drawn.}}
+  \caption[The \glsfmtshort{mcp} host, client and server, and the points at which trust enters]{The \glsfmtshort{mcp} host, client and server, with the server's tools, resources and prompts and the external services behind them. Two trust points are marked: the user's choice of server at deployment (by name and description) and the model's reliance on tool descriptions and outputs at operation. A third, dashed arrow marks the update channel from the developer to the deployed server during maintenance. A fourth arrow marks the ratings that clients give the server at operation, which are the input to the mechanism studied here. Based on \cites[Figs.~2--3]{Hou2026}[p.~2412]{Song2026}; drawn for this dissertation, not copied.}\label{fig:mcp-trust}
+\end{figure}
+
+The \gls{mcp} security literature describes several ways in which a server can harm the agent that uses it. \Cref{tab:mcp-attacks} lists those discussed in this dissertation.
 
 \begin{table}[tb]
   \centering
-  \caption{Placeholder table.}\label{tab:placeholder}
-  \begin{tabular}{l}
+  \caption{Attacks by malicious \glsfmtshort{mcp} servers.}\label{tab:mcp-attacks}
+  \small
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.2\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.2\linewidth}}
     \toprule
-    Placeholder \\
+    Attack & What is malicious & Sources \\
+    \midrule
+    \Gls{tool-poisoning} & Instructions hidden in a tool's description, which the user cannot see, lead the model to leak data or take unauthorised actions while the tool still returns correct results & \cites[p.~2413]{Song2026}[p.~18]{Hou2026} \\
+    \addlinespace
+    \Gls{puppet-attack}; \gls{cross-server-shadowing} & One of several installed servers manipulates or imitates the tools of a trusted server, so that the trusted tool's invocation triggers the malicious one & \cites[p.~2413]{Song2026}[pp.~19--20]{Hou2026} \\
+    \addlinespace
+    \Gls{rug-pull} & A server that behaved as advertised when first published is later altered by its maintainer to introduce malicious code or end its safe functionality & \cites[p.~19]{Hou2026}[p.~2414]{Song2026} \\
+    \addlinespace
+    Malicious external resources & The server's code and descriptions appear benign, but the attacker plants instructions in third-party content that its tools retrieve & \cite[p.~2414]{Song2026} \\
+    \addlinespace
+    Command injection; backdoor & Malicious logic in the server's code or dependencies is triggered by crafted prompts or parameters & \cite[p.~20]{Hou2026} \\
+    \addlinespace
+    Memory stealing & A \enquote{parasitic parameter} in a tool's interface makes the agent pass its session context, including its interactions with other servers, to the malicious server, which secretly sends it on & \cite[p.~177]{Sun2025} \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
+
+\Glspl{rug-pull} differ from the other attacks in \cref{tab:mcp-attacks} in that the malicious behaviour follows a period of legitimate service. Hou et al.\ classify a \gls{rug-pull} as a threat posed by a malicious developer, originating in the declaration of capabilities, with service disruption and loss of trust as consequences; like \gls{tool-poisoning}, it is \enquote{introduced at the creation stage but triggered at operation}~\cite[p.~15]{Hou2026}. Their definition describes the attack as it reaches users: an apparently benign server, initially functioning as advertised, is later altered by its maintainer to introduce malicious code or end its safe functionality, and users who installed and trusted it become its victims without being aware of the change~\cite[p.~19]{Hou2026}. The two descriptions place the threat at different points, in the developer's declaration on one side and in the later change that users meet on the other. The mechanism studied here acts on ratings only, so it sees the attack from the users' side. From there, a payload that lies dormant from creation and activates in operation, and a benign server that is updated maliciously later, look alike: good experiences, then harmful ones. The scenarios of this dissertation therefore start from a server that serves its clients well for a period and then turns malicious, whichever route it takes. Song et al.\ separate \glspl{rug-pull} from \gls{tool-poisoning} by the stage of the trust lifecycle each exploits: \gls{tool-poisoning} exploits the gap in the initial audit at registration, whereas a \gls{rug-pull} exploits a \enquote{Static-Dynamic Mismatch} between what was checked when the server was listed and what it does later~\cite[p.~2414]{Song2026}. The attack is particularly effective against servers run with tools such as \texttt{npx} and \texttt{uvx}, which fetch a fresh copy of the server each time it runs, so a modified version reaches users without any new installation~\cite[p.~2414]{Song2026}.
+
+A change of this kind may be visible to the protocol, since servers notify clients of changes~\cite[p.~7]{Hou2026}. Such a notification reports that the server changed, not whether the change is harmful. The harm of a \gls{rug-pull} is experienced by clients in the operation phase, once they use the changed server, and this is also the phase in which they rate the servers they use, under the rating premise of \cref{sec:scope}. \Cref{ch:literature-review} compares a mechanism based on such ratings with the defences that act at creation and deployment.
+
+% ==================================================================================================
+\section{Trust and reputation systems}\label{sec:trust-reputation}
+
+\textcite{Hoffman2009} describe any \gls{reputation-system} along three dimensions. Its formulation is the mathematical specification of how the available information is turned into a reputation metric; its calculation is the algorithm that implements the formulation under practical constraints; and its dissemination is the means by which participants obtain the resulting values~\cite[p.~1:4]{Hoffman2009}. Of the three, the formulation \enquote{determines the theoretical properties of the system and thus the upper bound on its resilience to attacks}~\cite[p.~1:5]{Hoffman2009}. This dissertation is concerned with the formulation: how the ratings that clients give \gls{mcp} servers are turned into a trust score, and which ratings are used.
+
+Jøsang et al.\ define \gls{reputation} as \enquote{what is generally said or believed about a person's or thing's character or standing}, and distinguish it from \gls{trust}, as in \enquote{I trust you because of your good reputation}~\cite[p.~620]{Jsang2007}. The ratings that \gls{rev2} aggregates record whether an interaction with an \gls{mcp} server went right or wrong from a security point of view (\cref{sec:scope}). This dissertation therefore interprets a server's \gls{goodness} as the trust that its clients place in it, and uses the term \gls{trust-score} for it throughout.
+
+A formulation has three components~\cite[p.~1:5]{Hoffman2009}. Its source of information may be manual, such as the ratings users give after a transaction, or automatic, such as directly observed successes and failures~\cite[pp.~1:5, 1:7]{Hoffman2009}. The information may record positive events, negative events or both~\cite[p.~1:7]{Hoffman2009}. The metric may be binary, discrete or continuous~\cite[p.~1:7]{Hoffman2009}, and it may be symmetric, with one global value for each identity, or asymmetric, with each participant holding its own view of the others~\cite[p.~1:8]{Hoffman2009}. In these terms, the mechanism studied in this dissertation has a manual source (feedback that clients, or the agents acting for them, give about their own experience of a server, as opposed to observations of the server made by the system), records both positive and negative information, and uses a continuous, symmetric metric: one goodness score per server, the same for every client.
+
+The simplest formulations sum or average the ratings an entity has received~\cite[p.~628]{Jsang2007}. More advanced ones compute a weighted average, \enquote{where the rating weight can be determined by factors such as rater trustworthiness/reputation, age of the rating, distance between rating and current score, etc.}~\cite[p.~628]{Jsang2007}. Bayesian systems instead take binary ratings as input and update a beta probability distribution~\cite[p.~628]{Jsang2007}. Starting from a uniform prior with parameters $a = b = 1$, observing $r$ positive and $s$ negative outcomes gives $a = r + 1$ and $b = s + 1$, and the reputation score is most naturally defined as a function of the expected value $a/(a + b)$~\cite[p.~629]{Jsang2007}. The \gls{brs} that Parhizkar et al.\ extend to handle changing behaviour is of this kind~\cite[p.~2]{Parhizkar2022}. The prior acts as a pair of imaginary observations: with no ratings the expected value is 0.5, and as real ratings accumulate they outweigh the prior, since $(r + 1)/(r + s + 2)$ approaches $r/(r + s)$. REV2 handles entities with few ratings by a related device (\cref{sec:rev2-algorithm}).
+
+A formulation must also decide how much the age of a rating matters, because the entities being rated change. Jøsang et al.\ observe that variations in the quality of services \enquote{can be a result of deliberate management decisions or uncontrolled factors}, and that either way they lead to variations in reputation~\cite[p.~639]{Jsang2007}. Past ratings can be discounted by a \glslink{forgetting-factor}{forgetting}, aging or fading factor, or given a limited time to live~\cite[p.~639]{Jsang2007}. Hoffman et al.\ describe the choice as a trade-off between resilience to attacks and the acceptance of new or previously misbehaving identities, and they note that an input affected by transient conditions can give even honest participants a low reputation~\cite[p.~1:7]{Hoffman2009}. Ghasempouri and Tork Ladani separate a trust system's rate history from its trust computation model, whose main function \enquote{is to store and use the history of previous ratings to compute trust or reputation scores}; some such models weight recent ratings, while in others time plays no part~\cite[p.~578]{Ghasempouri2019}. In these terms, time can be handled in either of two places: inside the computation model, by weighting ratings according to their age, or in the rate history it is given. A time window does the latter: the computation model is left unchanged and only the set of ratings it receives differs.
+
+Manual sources raise a further problem: the raters may themselves be dishonest. Jøsang et al.\ call reducing the influence of unfairly positive or unfairly negative ratings \enquote{a fundamental problem in reputation systems where ratings from others are taken into account}, because the relying party cannot control the sincerity of subjective ratings~\cite[p.~638]{Jsang2007}. They group the defences into two categories~\cite[p.~638]{Jsang2007}. Endogenous discounting excludes or down-weights ratings whose values look unfair when compared with the other ratings; exogenous discounting weights each rating by the separately determined reputation of its rater. PeerTrust is an example of the second kind: it weights each piece of feedback by a credibility factor, and one of its credibility measures is the source's own trust value, computed recursively~\cite[p.~846]{LiXiong2004}. REV2 was motivated by the ease with which averages can be manipulated through fake accounts~\cite[p.~335]{Kumar2018}. The reliability of a rating depends on how far it deviates from the product's goodness and on the fairness of its rater, and all three scores are computed jointly from the whole rating graph (\cref{sec:rev2}). In Jøsang et al.'s terms, REV2 can therefore be read as combining both kinds of discounting in a single score; this classification is the dissertation's own, since fairness is not determined separately from the ratings but jointly with goodness. The attacks on reputation systems that such discounting is meant to resist are reviewed in \cref{ch:literature-review}.
+
+% ==================================================================================================
+\section{REV2 and the configuration used in this dissertation}\label{sec:rev2}
+
+% --------------------------------------------------------------------------------------------------
+\subsection{The rating graph and its three scores}\label{sec:rev2-graph}
+
+REV2 models a rating platform as a directed bipartite graph of users and products, in which each edge is a timestamped rating $(u, p)$ from a user $u$ to a product $p$~\cite[p.~333]{Kumar2018}. $\mathrm{Out}(u)$ denotes the set of ratings given by user $u$ and $\mathrm{In}(p)$ the set received by product $p$~\cite[p.~335]{Kumar2018}. Rating scores lie in $[-1, +1]$; on a five-star scale, one to five stars correspond to $-1$, $-0.5$, $0$, $+0.5$ and $+1$~\cite[p.~336]{Kumar2018}. Every user, rating and product has an unknown intrinsic score~\cite[p.~335]{Kumar2018}:
+
+\begin{itemize}
+    \item the \textbf{\gls{fairness}} $F(u) \in [0, 1]$ of a user, where 0 denotes a completely untrustworthy user and 1 a completely trustworthy one;
+    \item the \textbf{\gls{reliability}} $R(u, p) \in [0, 1]$ of a rating, from untrustworthy (0) to trustworthy (1);
+    \item the \textbf{\gls{goodness}} $G(p) \in [-1, +1]$ of a product, \enquote{a single number indicating the most likely rating a fair user would give it}~\cite[p.~335]{Kumar2018}.
+\end{itemize}
+
+Reliability is scored separately from fairness because the same user may give ratings of differing reliability~\cite[p.~335]{Kumar2018}. These names are REV2's own for the trustworthiness of a rater, the trustworthiness of a rating and the quality of a product; they carry none of the meanings that \enquote{fairness}, \enquote{reliability} or \enquote{goodness} have in machine learning and statistics.
+
+The three scores depend on one another, and Kumar et al.\ state the dependence as five axioms~\cite[pp.~335--336]{Kumar2018}. Better products receive higher ratings and more reliable positive ratings (Axioms 1 and 2). A rating is more reliable the closer its score is to the product's goodness (Axiom 3) and the fairer its user (Axiom 4). A user whose ratings are more reliable is fairer (Axiom 5). A sixth axiom concerns behaviour and is introduced with the behavioural component described below~\cite[p.~337]{Kumar2018}.
+
+% --------------------------------------------------------------------------------------------------
+\subsection{Formulation and algorithm}\label{sec:rev2-algorithm}
+
+One formulation that satisfies the five axioms is the following~\cite[p.~336]{Kumar2018}:
+
+\begin{equation}\label{eq:fairness}
+  F(u) = \frac{\sum_{(u,p)\in \mathrm{Out}(u)} R(u,p)}{\lvert\mathrm{Out}(u)\rvert}
+\end{equation}
+
+\begin{equation}\label{eq:goodness}
+  G(p) = \frac{\sum_{(u,p)\in \mathrm{In}(p)} R(u,p)\cdot \mathrm{score}(u,p)}{\lvert\mathrm{In}(p)\rvert}
+\end{equation}
+
+\begin{equation}\label{eq:reliability}
+  R(u,p) = \frac{\gamma_1 F(u) + \gamma_2 \left(1 - \frac{\lvert\mathrm{score}(u,p) - G(p)\rvert}{2}\right)}{\gamma_1 + \gamma_2}
+\end{equation}
+
+A user's fairness is the mean reliability of the ratings it gives. A product's goodness is the mean of the ratings it receives, each weighted by its reliability. A rating's reliability combines the fairness of its user with how closely the rating agrees with the product's goodness, in proportions set by $\gamma_1$ and $\gamma_2$. In the authors' words, the formulation results in \enquote{ignoring low reliability ratings and giving more importance to high reliability ones}~\cite[p.~336]{Kumar2018}. Because the sum in \cref{eq:goodness} is divided by the number of ratings rather than by their total reliability, an unreliable rating pulls goodness towards 0 rather than dropping out of the average.
+
+Most users give, and most products receive, only a few ratings, which leaves little evidence on which to judge them; Kumar et al.\ call this the \gls{cold-start} problem~\cite[p.~336]{Kumar2018}. REV2 addresses it with \gls{laplace-smoothing} of fairness and goodness~\cite[p.~336]{Kumar2018}:
+
+\begin{equation}\label{eq:fairness-smoothed}
+  F(u) = \frac{\sum_{(u,p)\in \mathrm{Out}(u)} R(u,p) + \alpha_1 \mu_f}{\lvert\mathrm{Out}(u)\rvert + \alpha_1}
+\end{equation}
+
+\begin{equation}\label{eq:goodness-smoothed}
+  G(p) = \frac{\sum_{(u,p)\in \mathrm{In}(p)} R(u,p)\cdot \mathrm{score}(u,p) + \beta_1 \mu_g}{\lvert\mathrm{In}(p)\rvert + \beta_1}
+\end{equation}
+
+Here $\alpha_1$ and $\beta_1$ are non-negative integer \glspl{pseudocount}, and $\mu_f$ and $\mu_g$ are \gls{prior} beliefs: the default fairness of a user that has given no ratings and the default goodness of a product that has received none~\cite[p.~336]{Kumar2018}. The effect is that \enquote{if a user gives only a few ratings, then its fairness score is close to default score $\mu_f$. The more ratings it gives, the more its fairness score moves towards the average of rating reliabilities}~\cite[p.~336]{Kumar2018}. Goodness behaves in the same way with respect to $\mu_g$. Like the prior in the Beta model of \cref{sec:trust-reputation}, the pseudocounts act as imaginary observations: \cref{eq:fairness-smoothed} adds $\alpha_1$ imaginary ratings of reliability $\mu_f$ to a user's real ones, and \cref{eq:goodness-smoothed} adds $\beta_1$ imaginary ratings of value $\mu_g$ to a product's. The two devices are not identical. The uniform Beta prior adds two imaginary observations, one positive and one negative, whereas $\alpha_1 = 1$ adds one.
+
+REV2 also has a \gls{behavioural-component}. \Gls{birdnest} computes a Bayesian estimate of how far the properties of a user deviate from those of the whole user population, and similarly for products and ratings; Kumar et al.\ used the inter-rating times of users and products and the text of ratings as these properties~\cite[p.~337]{Kumar2018}. The resulting normality scores $\Pi_U$, $\Pi_R$ and $\Pi_P$ enter the fairness, reliability and goodness equations with further weights $\alpha_2$, $\gamma_3$ and $\beta_2$~\cite[p.~337]{Kumar2018}.
+
+Algorithm 1 of the paper computes the scores iteratively~\cite[p.~337]{Kumar2018}. It initialises them from the behavioural scores, or to the highest value, 1, when no behavioural scores are available. It sets $\mu_f$ and $\mu_g$ to the mean initial fairness and goodness. It then updates goodness, reliability and fairness in turn until the error falls below a bound $\varepsilon$, \enquote{say $10^{-6}$}~\cite[p.~337]{Kumar2018}. The error is the largest of three sums of absolute changes since the previous iteration: one over the fairness of all users, one over the reliability of all ratings and one over the goodness of all products~\cite[p.~337]{Kumar2018}. Because these are sums over all nodes, a fixed $\varepsilon$ is a stricter tolerance per node on a larger graph than on a smaller one; this follows from the definition. The two windows of a comparison generally hold different numbers of ratings, so \cref{ch:methodology} states the convergence criterion and tolerance used here. The authors state that the algorithm is guaranteed to converge within a bounded number of iterations, with the proofs deferred to an online appendix, and that each iteration takes time linear in the number of ratings~\cite[p.~338]{Kumar2018}. Since the best parameter values cannot be known without labels, the algorithm is run for several combinations of the seven parameters $\alpha_1$, $\alpha_2$, $\beta_1$, $\beta_2$, $\gamma_1$, $\gamma_2$ and $\gamma_3$, which are non-negative integers~\cite[p.~337]{Kumar2018}. Each is varied from 0 to 2, which gives three values per parameter and $3^7 = 2{,}187$ combinations, and the unsupervised scores are the averages over these runs~\cite[p.~337]{Kumar2018}.
+
+REV2 runs with or without training labels~\cite[p.~334]{Kumar2018}. It was evaluated on five rating networks, two Bitcoin trading platforms, Amazon, Epinions and Flipkart~\cite[p.~338]{Kumar2018}, on the task of identifying fraudulent users. At Flipkart, investigators confirmed 127 of the 150 users that REV2 ranked as most likely fraudulent~\cite[p.~333]{Kumar2018}.
+
+% --------------------------------------------------------------------------------------------------
+\subsection{The configuration used in this dissertation}\label{sec:rev2-configuration}
+
+This dissertation uses REV2's network and cold-start components with fixed parameters, and leaves out the behavioural component. \Cref{tab:rev2-configuration} compares this configuration with the published one.
+
+\begin{table}[tb]
+  \centering
+  \caption{REV2 as published and as configured in this dissertation.}\label{tab:rev2-configuration}
+  \small
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.19\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+    \toprule
+    Element & REV2 as published & This dissertation \\
+    \midrule
+    Components & Network, \gls{cold-start}, behaviour~\cite[p.~337]{Kumar2018} & Network and \gls{cold-start} \\
+    \addlinespace
+    \Gls{prior} $\mu_f$ & Mean initial fairness, computed once before iterating~\cite[pp.~336--337]{Kumar2018} & 0.5 \\
+    \addlinespace
+    \Gls{prior} $\mu_g$ & Mean initial goodness, computed once before iterating~\cite[pp.~336--337]{Kumar2018} & 0 \\
+    \addlinespace
+    \Glspl{pseudocount} $\alpha_1$, $\beta_1$ & Swept over 0, 1 and 2~\cite[p.~337]{Kumar2018} & 1 \\
+    \addlinespace
+    Weights $\gamma_1$, $\gamma_2$ & Swept over 0, 1 and 2~\cite[p.~337]{Kumar2018} & Fixed; set in \cref{ch:methodology} \\
+    \addlinespace
+    Initial scores & Behavioural scores, or 1 when absent~\cite[p.~337]{Kumar2018} & Set in \cref{ch:methodology}, including whether the two windows start from the same scores \\
+    \addlinespace
+    Stopping rule and $\varepsilon$ & Largest of three summed changes; $\varepsilon$ \enquote{say $10^{-6}$}~\cite[p.~337]{Kumar2018} & Set in \cref{ch:methodology} \\
+    \addlinespace
+    Rating scale & One to five stars mapped to $-1$ to $+1$~\cite[p.~336]{Kumar2018} & Mapping of client ratings set in \cref{ch:methodology} \\
+    \addlinespace
+    Reported score & Average over 2,187 runs, in the unsupervised setting~\cite[p.~337]{Kumar2018} & A single run on each graph \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% --------------------------------------------------------------------------------------------------
+\subsection{REV2 on time windows of the rating graph}\label{sec:rev2-windows}
+
+In the mapping used here, clients, or the agents acting for them, take the role of REV2's users, \gls{mcp} servers take the role of products, and a server's trust score is its goodness $G(p)$ (\cref{sec:scope}). As \cref{sec:reputation} notes, REV2 was evaluated on identifying fraudulent users~\cite[p.~333]{Kumar2018}; using goodness to detect malicious servers therefore extends the algorithm to a use that paper did not evaluate.
+
+REV2 computes its scores from whatever \gls{rating-graph} it is given, and the edges of that graph carry timestamps~\cite[p.~333]{Kumar2018}. The windowed mechanism makes use of both facts. For a given time period, it keeps every rating whose timestamp falls within the period, discards the rest, and runs REV2 on the graph that remains. All three scores are then computed from that period's ratings alone: a client's fairness in the recent window, for instance, depends only on the ratings it gave during that window. The mechanism does this twice with an identical configuration, once for a \gls{historical-window} and once for a \gls{recent-window}, and compares the two goodness scores each server receives (\cref{fig:rev2-windows}). The recent score is reported in place of the historical one only when it has dropped below the historical score by more than a calibrated threshold; an improvement never changes the reported score (\cref{sec:aim}).
+
+Because $\mathrm{Out}(u)$ and $\mathrm{In}(p)$ in \cref{eq:fairness-smoothed,eq:goodness-smoothed} count only the ratings inside a window, how strongly a score is pulled towards its prior depends on how many ratings the window holds. Two consequences follow directly from the equations. A server with no ratings in a window, if it is kept in that window's graph, receives exactly its prior $\mu_g$. And with $\mu_g = 0$ the pull is towards 0, so for a well-rated server a window with few ratings gives a lower goodness than a window with many, though the server's behaviour is the same: if every rating of a server has reliability 1 and score 0.8, \cref{eq:goodness-smoothed} with $\beta_1 = 1$ gives $0.8n/(n + 1)$, which is 0.64 for $n = 4$ and about 0.78 for $n = 40$. How servers and clients with no ratings in a window are treated, and how many ratings a window must hold before its score is used, are specified in \cref{ch:methodology}.
+
+\begin{figure}[tb]
+  \centering
+  % TODO: draw Figure 2.2 and replace the box below with \includegraphics.
+  \fbox{\parbox[c][6cm][c]{0.85\linewidth}{\centering\itshape Figure to be drawn.}}
+  \caption[REV2 on a rating graph and on its historical and recent windows]{Left: a small rating graph with clients on one side and \glsfmtshort{mcp} servers on the other, edges labelled with rating scores, and $F(u)$, $R(u, p)$ and $G(p)$ annotated on one client, one edge and one server. Right: the same graph laid along a time axis, with its edges split into a historical window and a recent window; each window is scored separately by REV2, giving $G_{\mathrm{hist}}(p)$ and $G_{\mathrm{recent}}(p)$ for the same server. Toy values only; no simulation results.}\label{fig:rev2-windows}
+\end{figure}
+
+REV2 identifies a rating by its user--product pair~\cite[p.~333]{Kumar2018}; how repeated ratings of one server by the same client are combined within a window is specified in \cref{ch:methodology}. \Cref{ch:literature-review} examines the consequences of computing all three scores per window, explains why the whole graph rather than a single server's ratings is windowed, and discusses how the two windows can be positioned and sized.
+
+% ==================================================================================================
+\section{Concept drift and change detection}\label{sec:drift}
+
+% --------------------------------------------------------------------------------------------------
+\subsection{Concept drift}\label{sec:concept-drift}
+
+In machine learning, \gls{concept-drift} is a change over time in the data a model learns from, and in particular in the relationship between its inputs and the target it predicts~\cite[pp.~44:2, 44:4]{Gama2014}. \textcite{Gama2014} describe the forms such a change can take~\cite[pp.~44:5--44:6]{Gama2014}. A drift may be sudden, switching from one concept to another; incremental, passing through many intermediate concepts; or gradual, with the old and new concepts alternating for a time before the new one settles. A concept may also reoccur after a period. \textcite{Player2020} carry the idea over to trust, where the concept is the relationship between an agent's observable features and its behaviour. They distinguish sudden from gradual drift, and note that gradual drift is harder to detect when the difference between the two concepts is small but important~\cite[p.~6]{Player2020}.
+
+The threat patterns of this dissertation correspond to these forms; the correspondence is the dissertation's own, not the sources'. A \gls{rug-pull} is a sudden drift, \gls{gradual-poisoning} is a gradual or incremental one, and \glslink{on-off-attack}{cyclic on-off behaviour} is a recurring one (\cref{fig:behaviour-patterns}). These are forms of change in a server's behaviour. A detector in this setting does not see behaviour but the ratings that clients give, and these follow behaviour only as quickly and as completely as clients notice and report its effects (\cref{sec:scope}). A sudden change in behaviour may therefore reach the detector as a more gradual change in ratings. Nor are there input features here: what changes is the distribution of the ratings a server receives, not a relationship between inputs and a target as in the definition above.
+
+Gama et al.\ also separate drift from noise: \enquote{One of the challenges for concept drift handling algorithms is not to mix the true drift with an outlier or noise, which refers to a once-off random deviation or anomaly}, and they note that no adaptation is needed in the latter case~\cite[p.~44:6]{Gama2014}. The sub-question asks for a threshold that separates malicious shifts from \gls{benign-fluctuation}, and benign variation in an honest server's ratings is of more than one kind. This dissertation distinguishes four, a classification that is its own:
+
+\begin{enumerate}
+    \item temporary dips in a server's quality that recover, which correspond to Gama et al.'s noise;
+    \item sampling variation, since a goodness score computed from few ratings varies even when quality is constant;
+    \item variation produced by the windowing itself, because each window's scores are computed from that window's ratings alone and are pulled towards the prior in proportion to how few ratings the window holds (\cref{sec:rev2-windows});
+    \item a lasting decline in an honest server's quality, which is a true drift but not a malicious one.
+\end{enumerate}
+
+The threshold must tolerate the first three. The fourth cannot be told from a malicious shift by ratings alone. It is not among the simulated scenarios (\cref{ch:methodology}) and is acknowledged as a limitation.
+
+The examples of drift in the cited survey, such as a sensor that slowly wears out or a reader whose interests change~\cite[pp.~44:2, 44:5--44:6]{Gama2014}, are not adversarial, whereas the change studied in this dissertation is chosen by an attacker. The trade-offs described in the rest of this section are stated for drift that does not react to the detector; \cref{ch:literature-review} considers what changes when it does.
+
+\begin{figure}[tb]
+  \centering
+  % TODO: draw Figure 2.3 and replace the box below with \includegraphics.
+  \fbox{\parbox[c][6cm][c]{0.85\linewidth}{\centering\itshape Figure to be drawn.}}
+  \caption[Schematic behaviour patterns of a server]{Schematic timelines of a server's underlying behaviour (not of any computed score or of the ratings, which lag and blur these shapes). Horizontal axis: time. Vertical axis: the quality that clients experience from the server, higher being better. Four panels: a benign server with a temporary dip that recovers (noise, kind~1 in \cref{sec:concept-drift}); a rug pull (sudden drift) at onset $\tau$, the time at which the server turns malicious; on-off behaviour (recurring drift); and gradual poisoning (gradual or incremental drift). Illustrative shapes only; no simulation results.}\label{fig:behaviour-patterns}
+\end{figure}
+
+% --------------------------------------------------------------------------------------------------
+\subsection{Memory: windows and forgetting}\label{sec:memory-windows}
+
+Gama et al.\ organise adaptive learning systems into four modules: memory, change detection, learning and loss estimation~\cite[pp.~44:7, 44:11]{Gama2014}. Memory determines which data the learner uses and how old data is forgotten, and change detection identifies when a change has occurred~\cite[pp.~44:11, 44:14]{Gama2014}. In these terms, which are this dissertation's mapping rather than the survey's, the historical and recent windows of the mechanism are its memory, and the rule that compares their goodness scores is its change detector.
+
+A window may hold a fixed number of the most recent examples, or vary in size over time, typically shrinking when a change is detected and growing otherwise~\cite[p.~44:12]{Gama2014}. A window can be sequence-based, defined by a number of observations, or timestamp-based, defined by a duration; a \gls{landmark-window} holds everything that has arrived since a given time~\cite[p.~44:13]{Gama2014}. The windows in this dissertation are \glslink{time-window}{timestamp-based} (\cref{sec:scope}). Choosing a window's size is a trade-off. A short window reflects the current distribution more accurately and so adapts quickly to change, but it performs worse during stable periods; a long window performs better in stable periods but reacts to change more slowly~\cite[p.~44:12]{Gama2014}. This trade-off is described for drift that does not respond to the choice of window. More generally, \enquote{The more abrupt forgetting is, the faster the reactivity, but also the higher the risk is of capturing noise}~\cite[p.~44:13]{Gama2014}. At the other extreme, a learner with no explicit forgetting adapts only as old concepts are diluted by new data~\cite[p.~44:12]{Gama2014}, which is the position of a score computed over a server's complete history. \Gls{adwin} avoids fixing a window size in advance: it grows its window while the data are stable and drops the older part when two sub-windows have sufficiently different means~\cites[p.~443]{Bifet2007}[p.~44:18]{Gama2014}. Player and Griffiths apply the same idea to trust. Their method, \gls{raptar}, deletes old interaction outcomes using a modification of \gls{adwin}, and identifies the point of behaviour change by applying a \gls{def-ks} test to the window of outcomes from a group of agents~\cite[p.~2]{Player2020}.
+
+% --------------------------------------------------------------------------------------------------
+\subsection{Change detection}\label{sec:change-detection}
+
+Gama et al.\ group change detectors into four families: methods based on sequential analysis, on control charts, on differences between two distributions, and a fourth family that their overview calls \enquote{heuristic methods}~\cite[p.~44:14]{Gama2014} and their later section calls contextual approaches~\cite[p.~44:18]{Gama2014}. The fourth, which includes learners that use the timestamp of an example as an input feature~\cite[p.~44:18]{Gama2014}, is not used here. \Cref{tab:detector-families} summarises the first three; the grouping is Gama et al.'s.
+
+\begin{table}[tb]
+  \centering
+  \caption{Families of change detector.}\label{tab:detector-families}
+  \small
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.14\linewidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+    \toprule
+    Family & What is monitored & When a change is signalled & Examples \\
+    \midrule
+    Sequential analysis & A cumulative statistic of the deviations of successive observations & When the statistic exceeds a threshold & \gls{cusum}~\cite{Page1954}; \gls{ph} \cites[p.~44:15]{Gama2014}[p.~1]{Parhizkar2022} \\
+    \addlinespace
+    Control charts & A model's error rate against the lowest rate observed so far & When the error rate passes a bound set by its standard deviation & Statistical process control~\cite[p.~44:16]{Gama2014} \\
+    \addlinespace
+    Two windows & The data in a reference window and in a window of recent observations & When a statistical test or distance between the two passes a threshold & \gls{hellinger-distance}~\cite{Ditzler2011}; incremental \gls{ks} test~\cite{dosReis2016}; \gls{adwin}~\cite[p.~443]{Bifet2007}; in trust, \gls{raptar}~\cite[p.~2]{Player2020} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Sequential detectors descend from Page's \gls{def-cusum}, \gls{cusum}~\cite{Page1954}. In the form Gama et al.\ give, the statistic $g_t = \max(0, g_{t-1} + (x_t - \delta))$ accumulates the amount by which each observation $x_t$ exceeds an allowed magnitude of change $\delta$, and an alarm is raised when $g_t$ exceeds a threshold $\lambda$~\cite[p.~44:15]{Gama2014}. This $\delta$ is an allowance inside the detector. It is unrelated to the dissertation's \gls{delta-threshold}, which is a decision threshold on the difference between two scores and so is closer in role to $\lambda$. The two parameters \enquote{control the tradeoff between earlier detecting the true changes and allowing more false alarms}~\cite[p.~44:15]{Gama2014}. The \gls{ph} test is a variant of \gls{cusum} with the same trade-off: \enquote{Larger $\lambda$ will entail fewer false alarms but might miss some changes}~\cite[p.~44:15]{Gama2014}. Parhizkar et al.\ use the \gls{ph} test within a \gls{brs} to detect and dismiss \glspl{trustee} whose behaviour worsens~\cite[p.~1]{Parhizkar2022}.
+
+Two-window detectors instead \enquote{use a fixed reference window that summarizes the past information and a sliding detection window over the most recent examples}, and compare the data in the two with a statistical test~\cite[p.~44:17]{Gama2014}. Ditzler and Polikar compute the \gls{hellinger-distance} between histograms of the current data and of a reference distribution~\cite[pp.~42--43]{Ditzler2011}. Dos Reis et al.\ keep a fixed reference set and a sliding window of the most recent $W$ instances, and compare them with a \gls{def-ks} test~\cite[p.~1548]{dosReis2016}. A related pattern compares a short-term estimate with a long-term one: the short window is \enquote{more reactive, while the large window is more conservative}~\cite[p.~44:25]{Gama2014}. The comparison of historical and recent goodness in this dissertation belongs to the two-window family by structure, but it differs in what is compared. The detectors above compare samples of observations, and their guarantees rest on assumptions about those observations: \gls{adwin}'s setting, for example, assumes bounded values, each generated independently of the others~\cite[p.~444]{Bifet2007}. Here the compared quantities are two goodness scores, each the output of an iterative algorithm in which fairness, reliability and goodness are computed jointly and shrunk towards a prior (\cref{sec:rev2}). They are not independent observations, and no sampling distribution is known for their difference. Its false-alarm behaviour therefore has to be established empirically, which is the purpose of the calibration in the sub-question.
+
+% --------------------------------------------------------------------------------------------------
+\subsection{Evaluating a change detector}\label{sec:evaluating-detector}
+
+Gama et al.\ list three criteria for evaluating a change detector~\cite[p.~44:26]{Gama2014}: the probability of detecting a true change; the probability of \glspl{false-alarm}, which in streams is often reported through the \gls{average-run-length} between false alarms; and the \glslink{detection-delay}{delay of detection}, the number of observations or the time needed to detect a change after it has occurred. Page defined the \gls{average-run-length} of an inspection scheme as the expected number of observations before action is taken. When nothing has changed, it measures the cost of false alarms; after a change, it measures the delay before the change is acted on~\cite[p.~101]{Page1954}. Page also mentions a related measure, \enquote{the probability that action is taken within $n$ observations}~\cite[p.~101]{Page1954}. Measuring detection and delay requires knowing when each change occurred, which is why \cref{ch:introduction} adopted simulated rating scenarios~\cite[p.~44:26]{Gama2014}. Two choices are left open here: the unit in which a run length or delay is counted (a rating, an evaluation of a window, or a time step), and how changes that are never detected enter an average delay. \Cref{ch:methodology} fixes both.
+
+These criteria give the terms in which the sub-question is posed: a threshold on the drop in goodness trades the probability and speed of detection against false alarms on honest servers, for drift that does not respond to the threshold. \Cref{ch:literature-review} reviews how such thresholds are chosen, and \cref{ch:methodology} defines the measures used in the evaluation.
