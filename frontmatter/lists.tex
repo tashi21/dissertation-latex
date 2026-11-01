@@ -10,30 +10,27 @@
 
 \begingroup             % start a group: the changes below stay inside it
 \setstretch{1}          % lists are single-spaced even though body text is 1.5
-\let\clearpage\relax    % each list heading is an unnumbered \chapter*, which normally starts a new
-                        % page; disabling \clearpage inside this group keeps the lists on the same
-                        % page. Chapter 1 still starts a new page because \mainmatter comes after
-                        % the group ends.
 
 \tableofcontents        % "Contents"; not listed in itself
 
-% Each block below:
-%   \vspace{...}                            gap above the next list heading (chapter headings have
-%                                           no space above them)
+% Each block below starts on its own page (each list heading is an unnumbered \chapter*, which
+% starts a new page; the explicit \clearpage makes sure the invisible anchor below lands on that new
+% page, not at the end of the previous one):
+%   \clearpage                              start a new page for the list
 %   \phantomsection                         invisible anchor so the ToC link jumps to this spot
 %   \addcontentsline{toc}{chapter}{title}   add a chapter-level ToC entry
 %   \listof...                              print the list
 
-\vspace{2\baselineskip}\phantomsection
+\clearpage\phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}      % "List of Tables"
 \listoftables
 
-\vspace{2\baselineskip}\phantomsection
+\clearpage\phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}     % "List of Figures"
 \listoffigures
 
-\vspace{2\baselineskip}\phantomsection
+\clearpage\phantomsection
 \addcontentsline{toc}{chapter}{\listalgorithmname}  % "List of Algorithms"
 \listofalgorithms                                   % from the algorithm package
 
-\endgroup   % back to normal spacing and page breaks
+\endgroup   % back to normal spacing
